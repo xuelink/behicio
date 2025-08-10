@@ -1,7 +1,8 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import Script from "next/script";
 import { Client, Databases, ID } from "appwrite";
 import {
   Mail,
@@ -135,6 +136,20 @@ const skills = [
 
 export default function Home() {
   const [emailCopied, setEmailCopied] = useState(false);
+  const [turnstileId, setTurnstileId] = useState<string | null>(null);
+  const siteKey = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY;
+
+  useEffect(() => {
+    const w = window as any;
+    if (!siteKey) return;
+    if (w.turnstile && !turnstileId) {
+      const id = w.turnstile.render("#ts-container", {
+        sitekey: siteKey,
+        size: "invisible",
+      });
+      setTurnstileId(id);
+    }
+  }, [siteKey, turnstileId]);
 
   const handleCopy = async () => {
     try {
@@ -146,6 +161,21 @@ export default function Home() {
 
   return (
     <div className="min-h-screen">
+      <Script
+        src="https://challenges.cloudflare.com/turnstile/v0/api.js"
+        async
+        defer
+        onLoad={() => {
+          const w = window as any;
+          if (siteKey && !turnstileId && w.turnstile) {
+            const id = w.turnstile.render("#ts-container", {
+              sitekey: siteKey,
+              size: "invisible",
+            });
+            setTurnstileId(id);
+          }
+        }}
+      />
       {/* Nav */}
       <header className="sticky top-0 z-30 border-b border-slate-200/60 bg-white/80 backdrop-blur supports-[backdrop-filter]:bg-white/60">
         <div className="mx-auto max-w-7xl px-4 py-3 flex items-center justify-between">
@@ -191,12 +221,13 @@ export default function Home() {
               Builder, Blockchain Engineer, and Calisthenics Coach.
             </h1>
             <p className="mt-4 text-slate-600 max-w-prose">
-              I design and ship useful things:{" "}
+              I design and ship useful things: {""}
               <span className="font-medium">full‑stack apps</span>,
-              <span className="font-medium"> AI copilots</span>,{" "}
+              <span className="font-medium"> AI copilots</span>, {""}
               <span className="font-medium">blockchain solutions</span> — plus{" "}
+              {""}
               <span className="font-medium">calisthenics programs</span>.
-              Founder of{" "}
+              Founder of {""}
               <a
                 className="underline underline-offset-4 decoration-slate-300 hover:decoration-slate-700"
                 href="https://langx.io"
@@ -218,7 +249,7 @@ export default function Home() {
                 onClick={handleCopy}
                 className="rounded-2xl border px-3 py-2 inline-flex items-center"
               >
-                <Mail className="size-4 mr-2" />{" "}
+                <Mail className="size-4 mr-2" /> {""}
                 {emailCopied ? "Email copied!" : email}
               </button>
               {socials.map(({ href, label, Icon }) => (
@@ -230,7 +261,7 @@ export default function Home() {
                   aria-label={label}
                   className="inline-flex items-center gap-2 rounded-2xl border px-3 py-2 hover:bg-slate-50"
                 >
-                  <Icon className="size-5" aria-hidden />{" "}
+                  <Icon className="size-5" aria-hidden /> {""}
                   <span className="hidden sm:inline text-sm">{label}</span>
                 </a>
               ))}
@@ -443,11 +474,25 @@ export default function Home() {
 
             try {
               const formData = new FormData(form);
-              const payload = {
+              const payload: Record<string, string> = {
                 name: String(formData.get("name") || ""),
                 replyTo: String(formData.get("replyTo") || ""),
                 message: String(formData.get("message") || ""),
               };
+
+              // Execute Turnstile (invisible). If not configured, continue without token.
+              try {
+                const w = window as any;
+                if (siteKey && turnstileId && w.turnstile) {
+                  const token = await new Promise<string>((resolve) => {
+                    w.turnstile.execute(turnstileId, {
+                      action: "contact",
+                      callback: (t: string) => resolve(t),
+                    });
+                  });
+                  if (token) payload.captchaToken = token;
+                }
+              } catch {}
 
               const endpoint = process.env.NEXT_PUBLIC_APPWRITE_ENDPOINT;
               const project = process.env.NEXT_PUBLIC_APPWRITE_PROJECT_ID;
@@ -521,9 +566,11 @@ export default function Home() {
             rows={5}
             className="sm:col-span-2 rounded-2xl border px-4 py-3 outline-none focus:ring-2 focus:ring-slate-300"
           />
+          {/* Turnstile container (invisible) */}
+          <div id="ts-container" style={{ height: 0 }} />
           <div className="sm:col-span-2 flex items-center justify-between">
             <div className="text-sm text-slate-600">
-              Or email me directly:{" "}
+              Or email me directly: {""}
               <button
                 type="button"
                 onClick={() => navigator.clipboard.writeText(email)}
@@ -557,7 +604,7 @@ export default function Home() {
                 rel="noreferrer"
                 className="hover:text-slate-700 flex items-center gap-1"
               >
-                <Icon className="size-5" aria-hidden />{" "}
+                <Icon className="size-5" aria-hidden /> {""}
                 <span className="sr-only">{label}</span>
               </a>
             ))}
