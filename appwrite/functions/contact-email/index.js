@@ -1,3 +1,62 @@
+// Node 22 function using Appwrite's context logger (log/error)
+// Sends mail via Resend SMTP with Nodemailer
+
+import nodemailer from 'nodemailer';
+
+function escapeHtml(input = "") {
+  return String(input)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
+}
+
+export default async function handler({ req, res, log, error, env }) {
+  try {
+    const host = env?.SMTP_HOST || 'smtp.resend.com';
+    const port = Number(env?.SMTP_PORT || 465);
+    const secure = String(env?.SMTP_SECURE ?? '').toLowerCase() === 'true' || port === 465;
+    const user = env?.SMTP_USERNAME || 'resend';
+    const pass = env?.RESEND_API_KEY || env?.RESEND_API || env?.SMTP_PASSWORD;
+    const from = env?.RESEND_FROM || env?.SMTP_FROM;
+    const to = env?.EMAIL_TO;
+    const event = env?.APPWRITE_FUNCTION_EVENT || 'n/a';
+
+    const mask = (v = '') => (String(v).length > 8 ? `${String(v).slice(0, 4)}…${String(v).slice(-4)}` : '***');
+    log('[contact-email] triggered', { event, host, port, secure, user, hasPass: Boolean(pass), from, to });
+
+    if (!pass || !from || !to) {
+      error('[contact-email] missing env', { from, to, pass: mask(pass) });
+      return res.json({ ok: false, error: 'Missing SMTP envs: FROM (RESEND_FROM), PASSWORD (RESEND_API_KEY), EMAIL_TO' }, 500);
+    }
+
+    let payload = {};
+    try {
+      payload = JSON.parse(req?.payload || '{}');
+    } catch (_) {
+      payload = {};
+    }
+    log('[contact-email] payload', payload);
+
+    const name = payload.name || payload.full_name || payload.title || 'Unknown';
+    const replyTo = payload.replyTo || payload.email || payload.contact || '';
+    const message = payload.message || payload.content || payload.body || '';
+
+    const subject = `New contact from ${name}`;
+    const text = `Event: ${event}\n\nName: ${name}\nReply: ${replyTo}\n\n${message}`;
+    const html = `<div style=\"font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif\">\n      <p><strong>Name:</strong> ${escapeHtml(name)}</p>\n      <p><strong>Reply:</strong> ${escapeHtml(replyTo)}</p>\n      <p><strong>Message:</strong></p>\n      <pre style=\\"white-space:pre-wrap;font-family:inherit\\">${escapeHtml(message)}</pre>\n    </div>`;
+
+    const transporter = nodemailer.createTransport({ host, port, secure, auth: { user, pass } });
+    const info = await transporter.sendMail({ from, to, subject, text, html });
+    log('[contact-email] sent', { messageId: info?.messageId });
+    return res.json({ ok: true, messageId: info?.messageId || null });
+  } catch (e) {
+    error('[contact-email] error', { message: e?.message || String(e) });
+    return res.json({ ok: false, error: e?.message || String(e) }, 500);
+  }
+}
+
 // No email validation needed; replyTo may contain email or Telegram
 
 function escapeHtml(input = "") {
