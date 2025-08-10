@@ -8,8 +8,8 @@ import {
   Instagram,
   ArrowRight,
   ExternalLink,
-  Dumbbell,
   Code2,
+  Smartphone,
   Cpu,
   MapPin,
   Coins,
@@ -93,21 +93,21 @@ const services = [
     ],
   },
   {
+    Icon: Smartphone,
+    title: "Mobile Applications (iOS & Android)",
+    points: [
+      "Cross‑platform apps with Flutter & React Native",
+      "Hybrid stacks: Angular + Capacitor",
+      "Data layers: MongoDB, Appwrite, Realm",
+    ],
+  },
+  {
     Icon: Cpu,
     title: "IT & Infrastructure",
     points: [
       "Virtualization (VMware), cloud backups (VEEAM)",
       "Network architecture & security (Ubiquiti, Zero Trust)",
       "Microsoft 365 & Google Workspace integrations",
-    ],
-  },
-  {
-    Icon: Dumbbell,
-    title: "Calisthenics Coaching (Toronto)",
-    points: [
-      "Muscle‑ups, levers, handstands",
-      "Strength, mobility, injury‑aware progressions",
-      "Online or in‑person programming",
     ],
   },
 ];
