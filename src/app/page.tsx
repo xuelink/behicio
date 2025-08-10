@@ -469,7 +469,8 @@ export default function Home() {
                 databaseId,
                 collectionId,
                 ID.unique(),
-                payload
+                payload,
+                []
               );
 
               form.reset();
@@ -545,7 +546,7 @@ export default function Home() {
       <footer className="mt-10 border-t">
         <div className="mx-auto max-w-7xl px-4 py-8 text-sm text-slate-500 flex flex-col sm:flex-row items-center justify-between gap-4">
           <div>
-            © {new Date().getFullYear()} Izzet Behic Sakar. All rights reserved.
+            © {new Date().getFullYear()} Izzet Behic Sakar. Made love with gpt5.
           </div>
           <div className="flex items-center gap-3">
             {socials.map(({ href, label, Icon }) => (
