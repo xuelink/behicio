@@ -1,5 +1,4 @@
 import { NextResponse } from "next/server";
-import { Resend } from "resend";
 import { z } from "zod";
 
 export const runtime = "nodejs";
@@ -10,70 +9,17 @@ const contactSchema = z.object({
   message: z.string().min(10).max(2000),
 });
 
-function getResend(): Resend {
-  const apiKey = process.env.RESEND_API_KEY;
-  if (!apiKey) {
-    throw new Error("RESEND_API_KEY env is missing");
-  }
-  return new Resend(apiKey);
-}
-
-function isLikelyEmail(value: string): boolean {
-  return /[^@\s]+@[^@\s]+\.[^@\s]+/.test(value);
-}
-
-function escapeHtml(input: string): string {
-  return input
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;");
-}
+// Kept schema validation; the API no longer sends emails. We now recommend
+// using Appwrite from the client or a separate serverless function.
 
 export async function POST(request: Request) {
   try {
     const body = await request.json();
     const { name, replyTo, message } = contactSchema.parse(body);
 
-    const toEmail = process.env.CONTACT_TO_EMAIL;
-    if (!toEmail) {
-      return NextResponse.json(
-        { error: "CONTACT_TO_EMAIL env is missing" },
-        { status: 500 }
-      );
-    }
-    const fromEmail = process.env.CONTACT_FROM_EMAIL || "onboarding@resend.dev";
-
-    const subject = `New contact from ${name}`;
-    const text = `Name: ${name}\nReply: ${replyTo}\n\n${message}`;
-    const html = `<div style="font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif">
-      <p><strong>Name:</strong> ${escapeHtml(name)}</p>
-      <p><strong>Reply to:</strong> ${escapeHtml(replyTo)}</p>
-      <p><strong>Message:</strong></p>
-      <pre style="white-space:pre-wrap;font-family:inherit">${escapeHtml(
-        message
-      )}</pre>
-    </div>`;
-
-    const replyToHeader = isLikelyEmail(replyTo) ? replyTo : undefined;
-
-    const resend = getResend();
-    const { error } = await resend.emails.send({
-      from: fromEmail,
-      to: toEmail,
-      subject,
-      text,
-      html,
-      ...(replyToHeader ? { reply_to: replyToHeader } : {}),
-    });
-
-    if (error) {
-      return NextResponse.json(
-        { error: "Failed to send email" },
-        { status: 500 }
-      );
-    }
-
-    return NextResponse.json({ ok: true });
+    // This route is kept as a placeholder. On GitHub Pages, it won't be used.
+    // If deployed to a Node runtime, wire this to your preferred backend.
+    return NextResponse.json({ ok: true, note: "No-op: use Appwrite client." });
   } catch (err) {
     if (err instanceof z.ZodError) {
       return NextResponse.json(

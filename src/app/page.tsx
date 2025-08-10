@@ -2,6 +2,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import { Client, Databases, ID } from "appwrite";
 import {
   Mail,
   Github,
@@ -448,36 +449,49 @@ export default function Home() {
                 message: String(formData.get("message") || ""),
               };
 
-              const endpoint =
-                process.env.NEXT_PUBLIC_CONTACT_ENDPOINT ?? "/api/contact";
-              const res = await fetch(endpoint, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(payload),
-              });
+              const endpoint = process.env.NEXT_PUBLIC_APPWRITE_ENDPOINT;
+              const project = process.env.NEXT_PUBLIC_APPWRITE_PROJECT_ID;
+              const databaseId = process.env.NEXT_PUBLIC_APPWRITE_DATABASE_ID;
+              const collectionId =
+                process.env.NEXT_PUBLIC_APPWRITE_COLLECTION_ID;
 
-              if (res.ok) {
-                form.reset();
-                const notice = document.createElement("div");
-                notice.setAttribute("role", "status");
-                notice.className =
-                  "sm:col-span-2 rounded-2xl border px-4 py-3 text-green-700 bg-green-50";
-                notice.textContent = "Thanks! Your message has been sent.";
-                form.appendChild(notice);
-                setTimeout(() => notice.remove(), 3500);
-              } else {
-                const data = await res.json().catch(() => ({}));
-                const msg =
-                  data?.error ||
-                  "Something went wrong. Please try again later.";
-                const notice = document.createElement("div");
-                notice.setAttribute("role", "alert");
-                notice.className =
-                  "sm:col-span-2 rounded-2xl border px-4 py-3 text-red-700 bg-red-50";
-                notice.textContent = msg;
-                form.appendChild(notice);
-                setTimeout(() => notice.remove(), 5000);
+              if (!endpoint || !project || !databaseId || !collectionId) {
+                throw new Error(
+                  "Missing Appwrite env vars. Set NEXT_PUBLIC_APPWRITE_* in your environment."
+                );
               }
+
+              const client = new Client()
+                .setEndpoint(endpoint)
+                .setProject(project);
+              const databases = new Databases(client);
+              await databases.createDocument(
+                databaseId,
+                collectionId,
+                ID.unique(),
+                payload
+              );
+
+              form.reset();
+              const notice = document.createElement("div");
+              notice.setAttribute("role", "status");
+              notice.className =
+                "sm:col-span-2 rounded-2xl border px-4 py-3 text-green-700 bg-green-50";
+              notice.textContent = "Thanks! Your message has been sent.";
+              form.appendChild(notice);
+              setTimeout(() => notice.remove(), 3500);
+            } catch (err) {
+              const msg =
+                err instanceof Error
+                  ? err.message
+                  : "Something went wrong. Please try again later.";
+              const notice = document.createElement("div");
+              notice.setAttribute("role", "alert");
+              notice.className =
+                "sm:col-span-2 rounded-2xl border px-4 py-3 text-red-700 bg-red-50";
+              notice.textContent = msg;
+              form.appendChild(notice);
+              setTimeout(() => notice.remove(), 5000);
             } finally {
               if (submitBtn) {
                 submitBtn.disabled = false;
