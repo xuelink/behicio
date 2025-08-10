@@ -9,43 +9,47 @@ function escapeHtml(input = "") {
     .replace(/'/g, "&#039;");
 }
 
-async function fetchWithTimeout(url, options = {}, timeoutMs = 8000) {
-  const controller = new AbortController();
-  const timer = setTimeout(() => controller.abort(), timeoutMs);
-  try {
-    const resp = await fetch(url, { ...options, signal: controller.signal });
-    return resp;
-  } finally {
-    clearTimeout(timer);
-  }
-}
+const nodemailer = require('nodemailer');
 
 module.exports = async (req, res) => {
   try {
-    const { RESEND_API_KEY, RESEND_FROM, EMAIL_TO, APPWRITE_FUNCTION_EVENT } =
-      req.env || {};
+    const {
+      SMTP_HOST,
+      SMTP_PORT,
+      SMTP_USERNAME,
+      SMTP_PASSWORD,
+      SMTP_SECURE,
+      SMTP_FROM,
+      EMAIL_TO,
+      APPWRITE_FUNCTION_EVENT,
+    } = req.env || {};
 
     const mask = (v = "") => (String(v).length > 8 ? `${String(v).slice(0, 4)}…${String(v).slice(-4)}` : "***");
 
     const debug = {
       event: APPWRITE_FUNCTION_EVENT || "n/a",
-      hasKey: Boolean(RESEND_API_KEY),
+      smtpHost: SMTP_HOST || 'smtp.resend.com',
+      smtpPort: Number(SMTP_PORT || 465),
+      smtpSecure: String(SMTP_SECURE ?? '').toLowerCase() === 'true' || Number(SMTP_PORT || 465) === 465,
+      smtpUser: SMTP_USERNAME || 'resend',
       emailTo: EMAIL_TO,
-      from: RESEND_FROM || "onboarding@resend.dev",
+      from: SMTP_FROM,
     };
     console.log("[contact-email] Triggered", debug);
 
-    if (!RESEND_API_KEY || !EMAIL_TO) {
+    if (!EMAIL_TO || !SMTP_FROM || !SMTP_PASSWORD) {
       console.error("[contact-email] Missing env", {
-        RESEND_API_KEY: mask(RESEND_API_KEY),
+        SMTP_HOST: debug.smtpHost,
+        SMTP_PORT: debug.smtpPort,
+        SMTP_USERNAME: debug.smtpUser,
+        SMTP_PASSWORD: mask(SMTP_PASSWORD),
         EMAIL_TO,
-        RESEND_FROM,
+        SMTP_FROM,
       });
       return res.json(
         {
           ok: false,
-          error:
-            "Missing email env. Set RESEND_API_KEY and EMAIL_TO (and RESEND_FROM optional).",
+          error: "Missing SMTP env. Required: SMTP_FROM, SMTP_PASSWORD, EMAIL_TO",
           debug,
         },
         500
@@ -67,7 +71,7 @@ module.exports = async (req, res) => {
     const replyTo = payload.replyTo || payload.email || payload.contact || "";
     const message = payload.message || payload.content || payload.body || "";
 
-    const from = RESEND_FROM || "onboarding@resend.dev";
+    const from = SMTP_FROM;
     const subject = `New contact from ${name}`;
     const text = `Event: ${APPWRITE_FUNCTION_EVENT || "n/a"}\n\nName: ${name}\nReply: ${replyTo}\n\n${message}`;
     const html = `<div style="font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif">
@@ -76,40 +80,15 @@ module.exports = async (req, res) => {
       <p><strong>Message:</strong></p>
       <pre style=\"white-space:pre-wrap;font-family:inherit\">${escapeHtml(message)}</pre>
     </div>`;
-
-    const body = {
-      from,
-      to: [EMAIL_TO],
-      subject,
-      text,
-      html,
-    };
-    console.log("[contact-email] Sending", { to: body.to, from: body.from, subject: body.subject });
-
-    const resp = await fetchWithTimeout("https://api.resend.com/emails", {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${RESEND_API_KEY}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(body),
-    }, 8000);
-
-    const dataText = await resp.text();
-    console.log("[contact-email] Resend response", { status: resp.status, body: dataText });
-    let data;
-    try {
-      data = JSON.parse(dataText);
-    } catch {
-      data = { raw: dataText };
-    }
-    if (!resp.ok) {
-      return res.json(
-        { ok: false, status: resp.status, error: data?.message || data, debug },
-        500
-      );
-    }
-    return res.json({ ok: true, id: data?.id || null, debug });
+    console.log("[contact-email] SMTP send", { to: EMAIL_TO, from, subject });
+    const transporter = nodemailer.createTransport({
+      host: debug.smtpHost,
+      port: debug.smtpPort,
+      secure: debug.smtpSecure,
+      auth: { user: debug.smtpUser, pass: SMTP_PASSWORD },
+    });
+    const info = await transporter.sendMail({ from, to: EMAIL_TO, subject, text, html });
+    return res.json({ ok: true, messageId: info?.messageId || null, debug });
   } catch (err) {
     console.error("[contact-email] Uncaught error", err);
     const isAbort = err && (err.name === 'AbortError' || /abort/i.test(String(err.name||'')));
