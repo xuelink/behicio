@@ -12,6 +12,7 @@ import {
   Code2,
   Cpu,
   MapPin,
+  Coins,
 } from "lucide-react";
 
 const email = "behicsakar@gmail.com";
@@ -19,12 +20,12 @@ const email = "behicsakar@gmail.com";
 const socials = [
   { href: "https://github.com/xuelink", label: "GitHub", Icon: Github },
   {
-    href: "https://www.linkedin.com/in/izzetbehic",
+    href: "https://www.linkedin.com/in/behicsakar/",
     label: "LinkedIn",
     Icon: Linkedin,
   },
   {
-    href: "https://instagram.com/start_calisthenics",
+    href: "https://instagram.com/behicsakar",
     label: "Instagram",
     Icon: Instagram,
   },
@@ -33,27 +34,51 @@ const socials = [
 const projects = [
   {
     title: "LangX.io",
-    tagline: "Open‑source language learning platform (15k+ users)",
+    tagline: "Open-source language learning platform (15k+ users)",
     link: "https://langx.io",
     tags: ["TypeScript", "Appwrite", "Flutter", "OpenAI"],
     description:
-      "Founded and led development of LangX: real‑time chat, AI grammar correction, and multilingual communities with 300+ contributors.",
+      "Founded and led development of LangX: real-time chat, AI grammar correction, and multilingual communities with 300+ contributors worldwide.",
   },
   {
-    title: "AI Productivity & ChatGPT Mastery",
-    tagline: "Digital course — launch fast with SkillRise.me",
-    link: "https://skillrise.me",
-    tags: ["Course", "Automation", "Monetization"],
+    title: "LangX Token Portal",
+    tagline: "Access token resources and ecosystem tools",
+    link: "https://token.langx.io",
+    tags: ["Token", "Ecosystem", "Web3"],
     description:
-      "Action‑focused curriculum on using AI to plan, build, and launch projects quickly.",
+      "Central hub for LangX token utilities, analytics, and ecosystem integrations.",
   },
   {
-    title: "Enterprise IT Optimization",
-    tagline: "Tatex Petrochemicals — 20% downtime reduction",
+    title: "LangX Litepaper",
+    tagline: "Read the official litepaper for LangX",
+    link: "https://docs.langx.io",
+    tags: ["Docs", "Whitepaper", "Tokenomics"],
+    description:
+      "Comprehensive overview of LangX’s vision, tokenomics, and roadmap.",
+  },
+  {
+    title: "wUSDT on Solana",
+    tagline: "Token listing prep: docs, tokenomics, integrations",
     link: "#",
-    tags: ["VMware", "VEEAM", "Microsoft 365"],
+    tags: ["Solana SPL", "DEX", "Tokenomics"],
     description:
-      "Directed IT for 150+ staff across borders; improved workflow efficiency by 30% via virtualization, network upgrades, and cloud backup integration.",
+      "Prepared comprehensive listing materials and integration guides for Solana SPL token, focusing on liquidity, wallets, and explorer metadata.",
+  },
+  {
+    title: "Blockchain Smart Contracts Suite",
+    tagline: "Custom ERC-20, BEP-20, and SPL token development",
+    link: "#",
+    tags: ["Solidity", "Web3", "DEX"],
+    description:
+      "Engineered secure smart contracts for multiple chains with liquidity pool integrations, governance, and staking modules.",
+  },
+  {
+    title: "AI-Driven Calisthenics Coach Bot",
+    tagline: "Personalized training plans via chat interface",
+    link: "#",
+    tags: ["AI", "Fitness", "Chatbot"],
+    description:
+      "Built a chatbot that generates progression-based calisthenics programs and tracks progress with computer vision pose analysis.",
   },
 ];
 
@@ -68,21 +93,21 @@ const services = [
     ],
   },
   {
-    Icon: Dumbbell,
-    title: "Calisthenics Coaching (Toronto)",
-    points: [
-      "Muscle‑ups, levers, handstands",
-      "Strength, mobility, injury‑aware progressions",
-      "Online or in‑person programming",
-    ],
-  },
-  {
     Icon: Cpu,
     title: "IT & Infrastructure",
     points: [
       "Virtualization (VMware), cloud backups (VEEAM)",
       "Network architecture & security (Ubiquiti, Zero Trust)",
       "Microsoft 365 & Google Workspace integrations",
+    ],
+  },
+  {
+    Icon: Dumbbell,
+    title: "Calisthenics Coaching (Toronto)",
+    points: [
+      "Muscle‑ups, levers, handstands",
+      "Strength, mobility, injury‑aware progressions",
+      "Online or in‑person programming",
     ],
   },
 ];
@@ -102,7 +127,9 @@ const skills = [
   "Tailwind",
   "OpenAI API",
   "Kubernetes",
-  "Solana/BSC",
+  "ethers.js / web3.js",
+  "Hardhat / Foundry",
+  "SPL / Solana, ERC‑20, BEP‑20",
 ];
 
 export default function Home() {
@@ -160,12 +187,13 @@ export default function Home() {
               <MapPin className="size-4" /> Toronto, Canada
             </p>
             <h1 className="mt-3 text-4xl/tight sm:text-5xl/tight font-extrabold tracking-[-0.02em]">
-              Builder, Coach, and AI tinkerer.
+              Builder, Blockchain Engineer, and Calisthenics Coach.
             </h1>
             <p className="mt-4 text-slate-600 max-w-prose">
               I design and ship useful things:{" "}
               <span className="font-medium">full‑stack apps</span>,
-              <span className="font-medium"> AI copilots</span>, and{" "}
+              <span className="font-medium"> AI copilots</span>,{" "}
+              <span className="font-medium">blockchain solutions</span> — plus{" "}
               <span className="font-medium">calisthenics programs</span>.
               Founder of{" "}
               <a
@@ -287,6 +315,56 @@ export default function Home() {
               </div>
             </div>
           ))}
+        </div>
+      </section>
+
+      {/* SkillRise */}
+      <section id="skillrise" className="mx-auto max-w-6xl px-4 py-12">
+        <div className="rounded-3xl border shadow-sm p-8 md:p-10">
+          <div className="flex flex-col gap-6 md:flex-row md:items-start md:justify-between">
+            <div className="max-w-2xl">
+              <h2 className="text-2xl font-bold">
+                SkillRise.me — Rise with New Skills
+              </h2>
+              <p className="mt-3 text-slate-700">
+                Actionable, well‑designed courses and tools to help you master
+                digital skills, boost productivity, and build a healthier, more
+                focused life. Trusted by 2,000+ learners worldwide.
+              </p>
+              <div className="mt-5 flex flex-wrap gap-3">
+                <a
+                  href="https://skillrise.me/"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="inline-flex items-center gap-2 rounded-2xl border px-4 py-2 hover:bg-slate-50"
+                  aria-label="Explore SkillRise courses"
+                >
+                  Explore Courses{" "}
+                  <ExternalLink className="size-4" aria-hidden />
+                </a>
+              </div>
+            </div>
+            <div className="mt-2 grid gap-2 text-sm text-slate-700 md:mt-0">
+              <div className="rounded-2xl border bg-white/70 px-4 py-2">
+                Fast, Focused Learning
+              </div>
+              <div className="rounded-2xl border bg-white/70 px-4 py-2">
+                Beginner‑Friendly Courses
+              </div>
+              <div className="rounded-2xl border bg-white/70 px-4 py-2">
+                AI‑Enhanced Guidance
+              </div>
+              <div className="rounded-2xl border bg-white/70 px-4 py-2">
+                Growth‑Focused Tracks
+              </div>
+              <div className="rounded-2xl border bg-white/70 px-4 py-2">
+                Community Support
+              </div>
+              <div className="rounded-2xl border bg-white/70 px-4 py-2">
+                Anytime, Anywhere Access
+              </div>
+            </div>
+          </div>
         </div>
       </section>
 

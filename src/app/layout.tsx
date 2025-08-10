@@ -5,9 +5,9 @@ import { Inter } from "next/font/google";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Izzet Behic Sakar — Builder, Coach, AI tinkerer",
+  title: "Izzet Behic Sakar — Builder, Coach, AI & Blockchain Specialist",
   description:
-    "Full‑stack developer & calisthenics coach in Toronto. Projects in React/Flutter, AI copilots, and Web3.",
+    "Full‑stack developer, blockchain engineer, and calisthenics coach in Toronto. Projects in React/Flutter, AI copilots, blockchain (Solidity, BEP‑20, SPL), and Web3.",
 };
 
 export default function RootLayout({
