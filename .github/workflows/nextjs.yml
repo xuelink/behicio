@@ -28,7 +28,7 @@ jobs:
   # Build job
   build:
     # Use GitHub Environments for environment-scoped secrets
-    environment: production
+    environment: github-pages
     runs-on: ubuntu-latest
     env:
       RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
