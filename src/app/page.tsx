@@ -1,6 +1,7 @@
 "use client";
 import { useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import {
   Mail,
   Github,
@@ -236,10 +237,15 @@ export default function Home() {
             </div>
           </div>
           <div className="md:w-2/5">
-            <div className="aspect-[4/3] w-full rounded-3xl bg-gradient-to-br from-slate-100 to-slate-200 shadow-inner flex items-center justify-center">
-              <span className="text-sm text-slate-500">
-                Add a photo or logo here
-              </span>
+            <div className="relative aspect-[4/3] w-full overflow-hidden rounded-3xl bg-gradient-to-br from-slate-100 to-slate-200 shadow-inner">
+              <Image
+                src="/pp.jpg"
+                alt="Izzet Behic Sakar"
+                fill
+                priority
+                sizes="(max-width: 768px) 100vw, 40vw"
+                className="object-cover"
+              />
             </div>
           </div>
         </div>
