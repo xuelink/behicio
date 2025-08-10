@@ -9,6 +9,17 @@ function escapeHtml(input = "") {
     .replace(/'/g, "&#039;");
 }
 
+async function fetchWithTimeout(url, options = {}, timeoutMs = 8000) {
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), timeoutMs);
+  try {
+    const resp = await fetch(url, { ...options, signal: controller.signal });
+    return resp;
+  } finally {
+    clearTimeout(timer);
+  }
+}
+
 module.exports = async (req, res) => {
   try {
     const { RESEND_API_KEY, RESEND_FROM, EMAIL_TO, APPWRITE_FUNCTION_EVENT } =
@@ -75,14 +86,14 @@ module.exports = async (req, res) => {
     };
     console.log("[contact-email] Sending", { to: body.to, from: body.from, subject: body.subject });
 
-    const resp = await fetch("https://api.resend.com/emails", {
+    const resp = await fetchWithTimeout("https://api.resend.com/emails", {
       method: "POST",
       headers: {
         Authorization: `Bearer ${RESEND_API_KEY}`,
         "Content-Type": "application/json",
       },
       body: JSON.stringify(body),
-    });
+    }, 8000);
 
     const dataText = await resp.text();
     console.log("[contact-email] Resend response", { status: resp.status, body: dataText });
@@ -101,6 +112,7 @@ module.exports = async (req, res) => {
     return res.json({ ok: true, id: data?.id || null, debug });
   } catch (err) {
     console.error("[contact-email] Uncaught error", err);
-    return res.json({ ok: false, error: err?.message || String(err) }, 500);
+    const isAbort = err && (err.name === 'AbortError' || /abort/i.test(String(err.name||'')));
+    return res.json({ ok: false, error: err?.message || String(err), aborted: Boolean(isAbort) }, 500);
   }
 };
