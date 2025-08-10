@@ -30,10 +30,12 @@ module.exports = async (req, res) => {
       return res.json({ ok: false, error: 'Missing SMTP envs: FROM (RESEND_FROM), PASSWORD (RESEND_API_KEY), EMAIL_TO' }, 500);
     }
 
+    const rawPayload = req?.payload || '{}';
     let payload = {};
     try {
-      payload = JSON.parse(req?.payload || '{}');
+      payload = JSON.parse(rawPayload);
     } catch (_) {}
+    console.log('[contact-email] raw', rawPayload);
     console.log('[contact-email] payload', payload);
 
     const name = payload.name || payload.full_name || payload.title || 'Unknown';
@@ -47,10 +49,10 @@ module.exports = async (req, res) => {
     const transporter = nodemailer.createTransport({ host, port, secure, auth: { user, pass } });
     const info = await transporter.sendMail({ from, to, subject, text, html });
     console.log('[contact-email] sent', { messageId: info?.messageId });
-    return res.json({ ok: true, messageId: info?.messageId || null });
+    return res.json({ ok: true, messageId: info?.messageId || null, debug: { rawPayload, payload } });
   } catch (e) {
     console.error('[contact-email] error', e);
-    return res.json({ ok: false, error: e?.message || String(e) }, 500);
+    return res.json({ ok: false, error: e?.message || String(e) , debug: { note: 'see logs' }}, 500);
   }
 };
 
