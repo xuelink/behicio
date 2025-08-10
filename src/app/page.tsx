@@ -73,7 +73,7 @@ const projects = [
       "Engineered secure smart contracts for multiple chains with liquidity pool integrations, governance, and staking modules.",
   },
   {
-    title: "AI-Driven Calisthenics Coach Bot",
+    title: "AI-Driven Calisthenics Coach",
     tagline: "Personalized training plans via chat interface",
     link: "#",
     tags: ["AI", "Fitness", "Chatbot"],
