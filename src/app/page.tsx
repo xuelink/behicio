@@ -470,6 +470,35 @@ export default function Home() {
         </div>
       </section>
 
+      {/* Instagram */}
+      <section id="instagram" className="mx-auto max-w-7xl px-4 py-12">
+        <h2 className="text-2xl font-bold">Instagram</h2>
+        <p className="mt-2 text-slate-700">
+          Latest posts from{" "}
+          <a
+            className="underline underline-offset-4"
+            href="https://www.instagram.com/behicsakar/"
+            target="_blank"
+            rel="noreferrer"
+          >
+            @behicsakar
+          </a>
+        </p>
+        <div className="mt-6 rounded-3xl border overflow-hidden bg-white/80 backdrop-blur">
+          <iframe
+            src="https://www.instagram.com/behicsakar/embed"
+            title="Instagram profile embed"
+            loading="lazy"
+            style={{ width: "100%", minHeight: 600, border: 0 }}
+            allow="encrypted-media; clipboard-write"
+          />
+        </div>
+        <Script
+          src="https://www.instagram.com/embed.js"
+          strategy="lazyOnload"
+        />
+      </section>
+
       {/* Contact */}
       <section id="contact" className="mx-auto max-w-7xl px-4 py-12">
         <h2 className="text-2xl font-bold">Contact</h2>
@@ -477,6 +506,7 @@ export default function Home() {
           Reach out for collaborations, coaching, or consulting.
         </p>
         <form
+          noValidate
           onSubmit={async (e) => {
             e.preventDefault();
             const form = e.currentTarget as HTMLFormElement;
@@ -566,12 +596,22 @@ export default function Home() {
             required
             name="name"
             placeholder="Your name"
+            onInvalid={(e) => {
+              const el = e.currentTarget;
+              el.setCustomValidity("Please fill out this field.");
+            }}
+            onInput={(e) => e.currentTarget.setCustomValidity("")}
             className="rounded-2xl border px-4 py-3 outline-none focus:ring-2 focus:ring-slate-300"
           />
           <input
             required
             name="replyTo"
             placeholder="Email or Telegram"
+            onInvalid={(e) => {
+              const el = e.currentTarget;
+              el.setCustomValidity("Please fill out this field.");
+            }}
+            onInput={(e) => e.currentTarget.setCustomValidity("")}
             className="rounded-2xl border px-4 py-3 outline-none focus:ring-2 focus:ring-slate-300"
           />
           <textarea
@@ -579,6 +619,16 @@ export default function Home() {
             name="message"
             placeholder="How can I help?"
             rows={5}
+            minLength={10}
+            onInvalid={(e) => {
+              const el = e.currentTarget;
+              el.setCustomValidity(
+                el.validity.tooShort
+                  ? "Please enter at least 10 characters."
+                  : "Please fill out this field."
+              );
+            }}
+            onInput={(e) => e.currentTarget.setCustomValidity("")}
             className="sm:col-span-2 rounded-2xl border px-4 py-3 outline-none focus:ring-2 focus:ring-slate-300"
           />
           {/* Turnstile container (invisible) */}
