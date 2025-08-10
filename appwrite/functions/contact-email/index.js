@@ -89,24 +89,29 @@ export default async ({ req, res, log, error, env }) => {
       return res.json({ ok: false, error: 'Missing SMTP envs: FROM (RESEND_FROM), PASSWORD (RESEND_API_KEY), EMAIL_TO' }, 500);
     }
 
-    const rawPayload = req?.payload || req?.body || '{}';
+    // Resolve payload from multiple potential sources
+    let payloadSource = 'none';
+    let candidate = undefined;
+    if (req?.payload !== undefined) { candidate = req.payload; payloadSource = 'req.payload'; }
+    else if (req?.bodyJson !== undefined) { candidate = req.bodyJson; payloadSource = 'req.bodyJson'; }
+    else if (req?.bodyText !== undefined) { candidate = req.bodyText; payloadSource = 'req.bodyText'; }
+    else if (req?.body !== undefined) { candidate = req.body; payloadSource = 'req.body'; }
+
     let payload = {};
-    try {
-      payload = JSON.parse(rawPayload);
-    } catch (e) {
-      log('[contact-email] payload parse error', { error: e?.message, rawPayload });
-      // Try to parse from request body if payload is empty
-      if (!req?.payload && req?.body) {
+    if (candidate !== undefined) {
+      if (typeof candidate === 'string') {
         try {
-          payload = JSON.parse(req.body);
-          log('[contact-email] parsed from req.body', payload);
-        } catch (e2) {
-          log('[contact-email] req.body parse also failed', { error: e2?.message });
+          payload = JSON.parse(candidate);
+        } catch (e) {
+          log('[contact-email] failed to parse string candidate', { payloadSource, error: e?.message });
         }
+      } else if (typeof candidate === 'object' && candidate !== null) {
+        payload = candidate;
       }
     }
-    
-    log('[contact-email] raw payload', rawPayload);
+
+    log('[contact-email] payload resolved', { payloadSource, payloadType: typeof candidate, hasKeys: Boolean(Object.keys(payload || {}).length) });
+    log('[contact-email] raw payload', candidate);
     log('[contact-email] parsed payload', payload);
 
     const name = payload.name || payload.full_name || payload.title || 'Unknown';
@@ -126,7 +131,7 @@ export default async ({ req, res, log, error, env }) => {
     const info = await transporter.sendMail({ from, to, subject, text, html });
     
     log('[contact-email] email sent successfully', { messageId: info?.messageId });
-    return res.json({ ok: true, messageId: info?.messageId || null, debug: { rawPayload, payload } });
+    return res.json({ ok: true, messageId: info?.messageId || null, debug: { payloadSource } });
   } catch (e) {
     error('[contact-email] unhandled error', { message: e?.message || String(e) });
     return res.json({ ok: false, error: e?.message || String(e), debug: { note: 'see logs' }}, 500);
