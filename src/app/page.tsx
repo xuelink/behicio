@@ -13,7 +13,6 @@ import {
   Smartphone,
   Cpu,
   MapPin,
-  Coins,
 } from "lucide-react";
 
 const email = "behicsakar@gmail.com";
@@ -430,11 +429,59 @@ export default function Home() {
           Reach out for collaborations, coaching, or consulting.
         </p>
         <form
-          onSubmit={(e) => {
+          onSubmit={async (e) => {
             e.preventDefault();
-            alert(
-              "Thanks! Your message has been recorded. Replace this with a real backend (Appwrite/email). "
-            );
+            const form = e.currentTarget as HTMLFormElement;
+            const submitBtn = form.querySelector(
+              "button[type=submit]"
+            ) as HTMLButtonElement | null;
+            if (submitBtn) {
+              submitBtn.disabled = true;
+              submitBtn.textContent = "Sending...";
+            }
+
+            try {
+              const formData = new FormData(form);
+              const payload = {
+                name: String(formData.get("name") || ""),
+                replyTo: String(formData.get("replyTo") || ""),
+                message: String(formData.get("message") || ""),
+              };
+
+              const res = await fetch("/api/contact", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(payload),
+              });
+
+              if (res.ok) {
+                form.reset();
+                const notice = document.createElement("div");
+                notice.setAttribute("role", "status");
+                notice.className =
+                  "sm:col-span-2 rounded-2xl border px-4 py-3 text-green-700 bg-green-50";
+                notice.textContent = "Thanks! Your message has been sent.";
+                form.appendChild(notice);
+                setTimeout(() => notice.remove(), 3500);
+              } else {
+                const data = await res.json().catch(() => ({}));
+                const msg =
+                  data?.error ||
+                  "Something went wrong. Please try again later.";
+                const notice = document.createElement("div");
+                notice.setAttribute("role", "alert");
+                notice.className =
+                  "sm:col-span-2 rounded-2xl border px-4 py-3 text-red-700 bg-red-50";
+                notice.textContent = msg;
+                form.appendChild(notice);
+                setTimeout(() => notice.remove(), 5000);
+              }
+            } finally {
+              if (submitBtn) {
+                submitBtn.disabled = false;
+                submitBtn.textContent = "Send";
+              }
+            }
           }}
           className="mt-6 grid sm:grid-cols-2 gap-4"
         >
@@ -468,7 +515,10 @@ export default function Home() {
                 {email}
               </button>
             </div>
-            <button type="submit" className="rounded-2xl border px-4 py-2">
+            <button
+              type="submit"
+              className="rounded-2xl border px-4 py-2 disabled:opacity-50"
+            >
               Send
             </button>
           </div>
