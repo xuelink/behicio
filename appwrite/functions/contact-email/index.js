@@ -159,37 +159,37 @@
 //   }
 // };
 
-import nodemailer from 'nodemailer';
+// import nodemailer from 'nodemailer';
 
 export default async ({ req, res, log, error, env }) => {
   log('hello world'); // test log
 
-  const host = env?.SMTP_HOST || 'smtp.resend.com';
-  const port = Number(env?.SMTP_PORT || 465);
-  const secure = String(env?.SMTP_SECURE ?? '').toLowerCase() === 'true' || port === 465;
-  const user = env?.SMTP_USERNAME || 'resend';
-  const pass = env?.RESEND_API_KEY || env?.RESEND_API || env?.SMTP_PASSWORD;
-  const from = env?.RESEND_FROM || env?.SMTP_FROM;
-  const to = env?.EMAIL_TO;
+  // const host = env?.SMTP_HOST || 'smtp.resend.com';
+  // const port = Number(env?.SMTP_PORT || 465);
+  // const secure = String(env?.SMTP_SECURE ?? '').toLowerCase() === 'true' || port === 465;
+  // const user = env?.SMTP_USERNAME || 'resend';
+  // const pass = env?.RESEND_API_KEY || env?.RESEND_API || env?.SMTP_PASSWORD;
+  // const from = env?.RESEND_FROM || env?.SMTP_FROM;
+  // const to = env?.EMAIL_TO;
 
-  if (!pass || !from || !to) {
-    error('Missing SMTP envs', { from, to, hasPass: Boolean(pass) });
-    return res.json({ ok: false, error: 'Missing SMTP envs' }, 500);
-  }
+  // if (!pass || !from || !to) {
+  //   error('Missing SMTP envs', { from, to, hasPass: Boolean(pass) });
+  //   return res.json({ ok: false, error: 'Missing SMTP envs' }, 500);
+  // }
 
-  const payload = JSON.parse(req?.payload || '{}');
-  log('payload', payload);
+  // const payload = JSON.parse(req?.payload || '{}');
+  // log('payload', payload);
 
-  const name = payload.name || 'Unknown';
-  const replyTo = payload.replyTo || '';
-  const message = payload.message || '';
+  // const name = payload.name || 'Unknown';
+  // const replyTo = payload.replyTo || '';
+  // const message = payload.message || '';
 
-  const subject = `New contact from ${name}`;
-  const text = `Reply: ${replyTo}\n\n${message}`;
+  // const subject = `New contact from ${name}`;
+  // const text = `Reply: ${replyTo}\n\n${message}`;
 
-  const transporter = nodemailer.createTransport({ host, port, secure, auth: { user, pass } });
-  const info = await transporter.sendMail({ from, to, subject, text, html: `<pre>${text}</pre>` });
+  // const transporter = nodemailer.createTransport({ host, port, secure, auth: { user, pass } });
+  // const info = await transporter.sendMail({ from, to, subject, text, html: `<pre>${text}</pre>` });
 
-  log('sent', { messageId: info?.messageId });
+  // log('sent', { messageId: info?.messageId });
   return res.json({ ok: true, messageId: info?.messageId || null });
 };
