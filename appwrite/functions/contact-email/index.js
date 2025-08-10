@@ -39,7 +39,8 @@ module.exports = async (req, res) => {
       emailTo: EMAIL_TO,
       from: fromAddress,
     };
-    console.log("[contact-email] Triggered", debug);
+    console.log("[contact-email] Triggered");
+    console.log(req.env);
 
     if (!EMAIL_TO || !fromAddress || !password) {
       console.error("[contact-email] Missing env", {
