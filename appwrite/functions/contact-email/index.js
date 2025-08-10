@@ -16,12 +16,13 @@ module.exports = async (req, res) => {
 
     const mask = (v = "") => (String(v).length > 8 ? `${String(v).slice(0, 4)}…${String(v).slice(-4)}` : "***");
 
-    console.log("[contact-email] Triggered", {
+    const debug = {
       event: APPWRITE_FUNCTION_EVENT || "n/a",
       hasKey: Boolean(RESEND_API_KEY),
       emailTo: EMAIL_TO,
       from: RESEND_FROM || "onboarding@resend.dev",
-    });
+    };
+    console.log("[contact-email] Triggered", debug);
 
     if (!RESEND_API_KEY || !EMAIL_TO) {
       console.error("[contact-email] Missing env", {
@@ -34,6 +35,7 @@ module.exports = async (req, res) => {
           ok: false,
           error:
             "Missing email env. Set RESEND_API_KEY and EMAIL_TO (and RESEND_FROM optional).",
+          debug,
         },
         500
       );
@@ -92,11 +94,11 @@ module.exports = async (req, res) => {
     }
     if (!resp.ok) {
       return res.json(
-        { ok: false, status: resp.status, error: data?.message || data },
+        { ok: false, status: resp.status, error: data?.message || data, debug },
         500
       );
     }
-    return res.json({ ok: true, id: data?.id || null });
+    return res.json({ ok: true, id: data?.id || null, debug });
   } catch (err) {
     console.error("[contact-email] Uncaught error", err);
     return res.json({ ok: false, error: err?.message || String(err) }, 500);
