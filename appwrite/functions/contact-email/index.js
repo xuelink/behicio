@@ -19,6 +19,17 @@ export default async ({ req, res, log, error, env }) => {
     hasEmailTo: Boolean(env?.EMAIL_TO)
   });
 
+  // Try alternative ways to access environment variables
+  log('[contact-email] env access attempts', {
+    envDirect: Boolean(env),
+    envType: typeof env,
+    processEnv: Boolean(process?.env),
+    processEnvKeys: process?.env ? Object.keys(process.env).filter(key => key.includes('RESEND') || key.includes('EMAIL')) : [],
+    hasProcessResendApiKey: Boolean(process?.env?.RESEND_API_KEY),
+    hasProcessResendFrom: Boolean(process?.env?.RESEND_FROM),
+    hasProcessEmailTo: Boolean(process?.env?.EMAIL_TO)
+  });
+
   // Use Appwrite's context logger per docs
   log('[contact-email] hello world', { event: env?.APPWRITE_FUNCTION_EVENT || 'n/a' });
 
@@ -45,9 +56,9 @@ export default async ({ req, res, log, error, env }) => {
     const port = Number(env?.SMTP_PORT || 465);
     const secure = String(env?.SMTP_SECURE ?? '').toLowerCase() === 'true' || port === 465;
     const user = env?.SMTP_USERNAME || 'resend';
-    const pass = env?.RESEND_API_KEY || env?.RESEND_API || env?.SMTP_PASSWORD;
-    const from = env?.RESEND_FROM || env?.SMTP_FROM;
-    const to = env?.EMAIL_TO;
+    const pass = env?.RESEND_API_KEY || env?.RESEND_API || env?.SMTP_PASSWORD || process?.env?.RESEND_API_KEY || process?.env?.RESEND_API || process?.env?.SMTP_PASSWORD;
+    const from = env?.RESEND_FROM || env?.SMTP_FROM || process?.env?.RESEND_FROM || process?.env?.SMTP_FROM;
+    const to = env?.EMAIL_TO || process?.env?.EMAIL_TO;
     const event = env?.APPWRITE_FUNCTION_EVENT || 'n/a';
 
     log('[contact-email] env summary', { host, port, secure, user, hasPass: Boolean(pass), from, to });
