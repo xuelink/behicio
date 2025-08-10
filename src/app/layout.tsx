@@ -9,6 +9,10 @@ export const metadata: Metadata = {
   title: "Izzet Behic Sakar — Builder, Coach, AI & Blockchain Specialist",
   description:
     "Full‑stack developer, blockchain engineer, and calisthenics coach in Toronto. Projects in React/Flutter, AI copilots, blockchain (Solidity, BEP‑20, SPL), and Web3.",
+  icons: {
+    icon: "/favicon.ico",
+    shortcut: "/favicon.ico",
+  },
   openGraph: {
     type: "website",
     url: "https://behic.io/",
