@@ -15,6 +15,7 @@ import {
   Smartphone,
   Cpu,
   MapPin,
+  Heart,
 } from "lucide-react";
 
 // Turnstile global typings to avoid using 'any'
@@ -654,7 +655,13 @@ export default function Home() {
       <footer className="mt-10 border-t">
         <div className="mx-auto max-w-7xl px-4 py-8 text-sm text-slate-500 flex flex-col sm:flex-row items-center justify-between gap-4">
           <div>
-            © {new Date().getFullYear()} Izzet Behic Sakar. Made love with gpt5.
+            © {new Date().getFullYear()} Izzet Behic Sakar. Crafted with{" "}
+            <Heart
+              className="inline-block size-4 text-red-500 align-[-2px]"
+              aria-hidden
+              fill="currentColor"
+            />{" "}
+            and GPT‑5.
           </div>
           <div className="flex items-center gap-3">
             {socials.map(({ href, label, Icon }) => (
