@@ -55,6 +55,17 @@ export default async ({ req, res, log, error, env }) => {
     isDatabaseEvent: req?.headers?.['x-appwrite-trigger'] === 'event'
   });
 
+  // Log all available request properties
+  log('[contact-email] request properties', {
+    hasPayload: Boolean(req?.payload),
+    hasBody: Boolean(req?.body),
+    hasRawBody: Boolean(req?.rawBody),
+    hasData: Boolean(req?.data),
+    hasContent: Boolean(req?.content),
+    requestKeys: Object.keys(req || {}),
+    requestMethods: Object.getOwnPropertyNames(req || {}).filter(name => typeof req[name] === 'function')
+  });
+
   try {
     // Handle ping endpoint for testing
     if (req?.path === '/ping') {
@@ -78,11 +89,22 @@ export default async ({ req, res, log, error, env }) => {
       return res.json({ ok: false, error: 'Missing SMTP envs: FROM (RESEND_FROM), PASSWORD (RESEND_API_KEY), EMAIL_TO' }, 500);
     }
 
-    const rawPayload = req?.payload || '{}';
+    const rawPayload = req?.payload || req?.body || '{}';
     let payload = {};
     try {
       payload = JSON.parse(rawPayload);
-    } catch (_) {}
+    } catch (e) {
+      log('[contact-email] payload parse error', { error: e?.message, rawPayload });
+      // Try to parse from request body if payload is empty
+      if (!req?.payload && req?.body) {
+        try {
+          payload = JSON.parse(req.body);
+          log('[contact-email] parsed from req.body', payload);
+        } catch (e2) {
+          log('[contact-email] req.body parse also failed', { error: e2?.message });
+        }
+      }
+    }
     
     log('[contact-email] raw payload', rawPayload);
     log('[contact-email] parsed payload', payload);
