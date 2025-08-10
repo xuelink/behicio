@@ -10,6 +10,15 @@ function escapeHtml(input = "") {
 }
 
 export default async ({ req, res, log, error, env }) => {
+
+  // Log all available environment variables (keys only, not values for security)
+  log('[contact-email] available env keys', { 
+    envKeys: Object.keys(env || {}),
+    hasResendApiKey: Boolean(env?.RESEND_API_KEY),
+    hasResendFrom: Boolean(env?.RESEND_FROM),
+    hasEmailTo: Boolean(env?.EMAIL_TO)
+  });
+
   // Use Appwrite's context logger per docs
   log('[contact-email] hello world', { event: env?.APPWRITE_FUNCTION_EVENT || 'n/a' });
 
