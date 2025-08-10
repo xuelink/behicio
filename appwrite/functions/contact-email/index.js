@@ -13,6 +13,18 @@ export default async ({ req, res, log, error, env }) => {
   // Use Appwrite's context logger per docs
   log('[contact-email] hello world', { event: env?.APPWRITE_FUNCTION_EVENT || 'n/a' });
 
+  // Log the entire req object for debugging
+  log('[contact-email] req object', { 
+    method: req?.method,
+    path: req?.path,
+    headers: req?.headers,
+    payload: req?.payload,
+    url: req?.url,
+    hasPayload: Boolean(req?.payload),
+    payloadType: typeof req?.payload,
+    payloadLength: req?.payload ? String(req?.payload).length : 0
+  });
+
   try {
     // Handle ping endpoint for testing
     if (req?.path === '/ping') {
