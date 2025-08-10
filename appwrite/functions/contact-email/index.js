@@ -14,7 +14,21 @@ module.exports = async (req, res) => {
     const { RESEND_API_KEY, RESEND_FROM, EMAIL_TO, APPWRITE_FUNCTION_EVENT } =
       req.env || {};
 
+    const mask = (v = "") => (String(v).length > 8 ? `${String(v).slice(0, 4)}…${String(v).slice(-4)}` : "***");
+
+    console.log("[contact-email] Triggered", {
+      event: APPWRITE_FUNCTION_EVENT || "n/a",
+      hasKey: Boolean(RESEND_API_KEY),
+      emailTo: EMAIL_TO,
+      from: RESEND_FROM || "onboarding@resend.dev",
+    });
+
     if (!RESEND_API_KEY || !EMAIL_TO) {
+      console.error("[contact-email] Missing env", {
+        RESEND_API_KEY: mask(RESEND_API_KEY),
+        EMAIL_TO,
+        RESEND_FROM,
+      });
       return res.json(
         {
           ok: false,
@@ -32,6 +46,7 @@ module.exports = async (req, res) => {
     } catch (_) {
       payload = {};
     }
+    console.log("[contact-email] Payload", payload);
 
     // Expecting Appwrite document payload
     const name =
@@ -56,6 +71,7 @@ module.exports = async (req, res) => {
       text,
       html,
     };
+    console.log("[contact-email] Sending", { to: body.to, from: body.from, subject: body.subject });
 
     const resp = await fetch("https://api.resend.com/emails", {
       method: "POST",
@@ -67,6 +83,7 @@ module.exports = async (req, res) => {
     });
 
     const dataText = await resp.text();
+    console.log("[contact-email] Resend response", { status: resp.status, body: dataText });
     let data;
     try {
       data = JSON.parse(dataText);
@@ -81,6 +98,7 @@ module.exports = async (req, res) => {
     }
     return res.json({ ok: true, id: data?.id || null });
   } catch (err) {
+    console.error("[contact-email] Uncaught error", err);
     return res.json({ ok: false, error: err?.message || String(err) }, 500);
   }
 };
