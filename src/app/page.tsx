@@ -17,6 +17,24 @@ import {
   MapPin,
 } from "lucide-react";
 
+// Turnstile global typings to avoid using 'any'
+type TurnstileSize = "invisible" | "compact" | "normal";
+type Turnstile = {
+  render: (
+    selector: string,
+    options: { sitekey: string; size?: TurnstileSize }
+  ) => string;
+  execute: (
+    id: string,
+    options: { action?: string; callback?: (token: string) => void }
+  ) => void;
+};
+declare global {
+  interface Window {
+    turnstile?: Turnstile;
+  }
+}
+
 const email = "behicsakar@gmail.com";
 
 const socials = [
@@ -140,10 +158,9 @@ export default function Home() {
   const siteKey = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY;
 
   useEffect(() => {
-    const w = window as any;
     if (!siteKey) return;
-    if (w.turnstile && !turnstileId) {
-      const id = w.turnstile.render("#ts-container", {
+    if (window.turnstile && !turnstileId) {
+      const id = window.turnstile.render("#ts-container", {
         sitekey: siteKey,
         size: "invisible",
       });
@@ -166,9 +183,8 @@ export default function Home() {
         async
         defer
         onLoad={() => {
-          const w = window as any;
-          if (siteKey && !turnstileId && w.turnstile) {
-            const id = w.turnstile.render("#ts-container", {
+          if (siteKey && !turnstileId && window.turnstile) {
+            const id = window.turnstile.render("#ts-container", {
               sitekey: siteKey,
               size: "invisible",
             });
@@ -482,10 +498,9 @@ export default function Home() {
 
               // Execute Turnstile (invisible). If not configured, continue without token.
               try {
-                const w = window as any;
-                if (siteKey && turnstileId && w.turnstile) {
+                if (siteKey && turnstileId && window.turnstile) {
                   const token = await new Promise<string>((resolve) => {
-                    w.turnstile.execute(turnstileId, {
+                    window.turnstile!.execute(turnstileId, {
                       action: "contact",
                       callback: (t: string) => resolve(t),
                     });

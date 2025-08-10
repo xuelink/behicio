@@ -15,7 +15,8 @@ const contactSchema = z.object({
 export async function POST(request: Request) {
   try {
     const body = await request.json();
-    const { name, replyTo, message } = contactSchema.parse(body);
+    // Validate shape only; we don't use individual fields here
+    contactSchema.parse(body);
 
     // This route is kept as a placeholder. On GitHub Pages, it won't be used.
     // If deployed to a Node runtime, wire this to your preferred backend.
