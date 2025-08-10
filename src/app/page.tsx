@@ -446,30 +446,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Coaching CTA */}
-      <section id="coaching" className="mx-auto max-w-7xl px-4 py-12">
-        <div className="rounded-3xl border border-slate-200/60 bg-white/80 backdrop-blur shadow-sm p-8 md:p-10">
-          <div className="md:flex items-center justify-between gap-8">
-            <div className="max-w-2xl">
-              <h2 className="text-2xl font-bold">1:1 Calisthenics Coaching</h2>
-              <p className="mt-3 text-slate-700">
-                Personalized programs for muscle‑ups, back levers, and
-                handstands. Progression‑based, sustainable, and
-                beginner‑friendly.
-              </p>
-            </div>
-            <div className="mt-6 md:mt-0">
-              <a
-                href="#contact"
-                className="rounded-2xl border px-4 py-3 inline-block"
-              >
-                Apply for coaching
-              </a>
-            </div>
-          </div>
-        </div>
-      </section>
-
       {/* Instagram */}
       <section id="instagram" className="mx-auto max-w-7xl px-4 py-12">
         <h2 className="text-2xl font-bold">Instagram</h2>
@@ -493,10 +469,30 @@ export default function Home() {
             allow="encrypted-media; clipboard-write"
           />
         </div>
-        <Script
-          src="https://www.instagram.com/embed.js"
-          strategy="lazyOnload"
-        />
+      </section>
+
+      {/* Coaching CTA */}
+      <section id="coaching" className="mx-auto max-w-7xl px-4 py-12">
+        <div className="rounded-3xl border border-slate-200/60 bg-white/80 backdrop-blur shadow-sm p-8 md:p-10">
+          <div className="md:flex items-center justify-between gap-8">
+            <div className="max-w-2xl">
+              <h2 className="text-2xl font-bold">1:1 Calisthenics Coaching</h2>
+              <p className="mt-3 text-slate-700">
+                Personalized programs for muscle‑ups, back levers, and
+                handstands. Progression‑based, sustainable, and
+                beginner‑friendly.
+              </p>
+            </div>
+            <div className="mt-6 md:mt-0">
+              <a
+                href="#contact"
+                className="rounded-2xl border px-4 py-3 inline-block"
+              >
+                Apply for coaching
+              </a>
+            </div>
+          </div>
+        </div>
       </section>
 
       {/* Contact */}
