@@ -16,6 +16,7 @@ import {
   Cpu,
   MapPin,
   Heart,
+  Music,
 } from "lucide-react";
 
 // Turnstile global typings to avoid using 'any'
@@ -49,6 +50,11 @@ const socials = [
     href: "https://instagram.com/behicsakar",
     label: "Instagram",
     Icon: Instagram,
+  },
+  {
+    href: "https://www.tiktok.com/@behicsakar",
+    label: "TikTok",
+    Icon: Music,
   },
 ];
 
