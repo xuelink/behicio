@@ -17,14 +17,18 @@ module.exports = async (req, res) => {
       SMTP_HOST,
       SMTP_PORT,
       SMTP_USERNAME,
-      SMTP_PASSWORD,
       SMTP_SECURE,
-      SMTP_FROM,
+      // Resend-specific vars (preferred)
+      RESEND_API_KEY,
+      RESEND_FROM,
       EMAIL_TO,
       APPWRITE_FUNCTION_EVENT,
     } = req.env || {};
 
     const mask = (v = "") => (String(v).length > 8 ? `${String(v).slice(0, 4)}…${String(v).slice(-4)}` : "***");
+
+    const password = RESEND_API_KEY;
+    const fromAddress = RESEND_FROM;
 
     const debug = {
       event: APPWRITE_FUNCTION_EVENT || "n/a",
@@ -33,23 +37,23 @@ module.exports = async (req, res) => {
       smtpSecure: String(SMTP_SECURE ?? '').toLowerCase() === 'true' || Number(SMTP_PORT || 465) === 465,
       smtpUser: SMTP_USERNAME || 'resend',
       emailTo: EMAIL_TO,
-      from: SMTP_FROM,
+      from: fromAddress,
     };
     console.log("[contact-email] Triggered", debug);
 
-    if (!EMAIL_TO || !SMTP_FROM || !SMTP_PASSWORD) {
+    if (!EMAIL_TO || !fromAddress || !password) {
       console.error("[contact-email] Missing env", {
         SMTP_HOST: debug.smtpHost,
         SMTP_PORT: debug.smtpPort,
         SMTP_USERNAME: debug.smtpUser,
-        SMTP_PASSWORD: mask(SMTP_PASSWORD),
+        SMTP_PASSWORD: mask(password),
         EMAIL_TO,
-        SMTP_FROM,
+        FROM: fromAddress,
       });
       return res.json(
         {
           ok: false,
-          error: "Missing SMTP env. Required: SMTP_FROM, SMTP_PASSWORD, EMAIL_TO",
+          error: "Missing SMTP env. Required: FROM (SMTP_FROM/RESEND_FROM), PASSWORD (SMTP_PASSWORD/RESEND_API/RESEND_API_KEY), EMAIL_TO",
           debug,
         },
         500
@@ -71,7 +75,7 @@ module.exports = async (req, res) => {
     const replyTo = payload.replyTo || payload.email || payload.contact || "";
     const message = payload.message || payload.content || payload.body || "";
 
-    const from = SMTP_FROM;
+    const from = fromAddress;
     const subject = `New contact from ${name}`;
     const text = `Event: ${APPWRITE_FUNCTION_EVENT || "n/a"}\n\nName: ${name}\nReply: ${replyTo}\n\n${message}`;
     const html = `<div style="font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif">
@@ -85,7 +89,7 @@ module.exports = async (req, res) => {
       host: debug.smtpHost,
       port: debug.smtpPort,
       secure: debug.smtpSecure,
-      auth: { user: debug.smtpUser, pass: SMTP_PASSWORD },
+      auth: { user: debug.smtpUser, pass: password },
     });
     const info = await transporter.sendMail({ from, to: EMAIL_TO, subject, text, html });
     return res.json({ ok: true, messageId: info?.messageId || null, debug });
