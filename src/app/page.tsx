@@ -42,7 +42,7 @@ const projects = [
       "Founded and led development of LangX: real-time chat, AI grammar correction, and multilingual communities with 300+ contributors worldwide.",
   },
   {
-    title: "LangX Token Portal",
+    title: "LangX Token",
     tagline: "Access token resources and ecosystem tools",
     link: "https://token.langx.io",
     tags: ["Token", "Ecosystem", "Web3"],
@@ -50,12 +50,12 @@ const projects = [
       "Central hub for LangX token utilities, analytics, and ecosystem integrations.",
   },
   {
-    title: "LangX Litepaper",
-    tagline: "Read the official litepaper for LangX",
-    link: "https://docs.langx.io",
-    tags: ["Docs", "Whitepaper", "Tokenomics"],
+    title: "New Chapter Technology LLC",
+    tagline: "US-based software development and consulting company",
+    link: "https://newchapter.tech",
+    tags: ["Web Development", "Mobile Apps", "Cloud"],
     description:
-      "Comprehensive overview of LangX’s vision, tokenomics, and roadmap.",
+      "Collaborated with a Wyoming-based tech firm delivering web, mobile, and cloud solutions across various industries, with a focus on quality and open-source contributions.",
   },
   {
     title: "wUSDT on Solana",
