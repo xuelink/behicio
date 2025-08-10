@@ -147,8 +147,8 @@ export default function Home() {
   return (
     <div className="min-h-screen">
       {/* Nav */}
-      <header className="sticky top-0 z-30 backdrop-blur supports-[backdrop-filter]:bg-white/60 bg-white/80 border-b">
-        <div className="mx-auto max-w-6xl px-4 py-3 flex items-center justify-between">
+      <header className="sticky top-0 z-30 border-b border-slate-200/60 bg-white/80 backdrop-blur supports-[backdrop-filter]:bg-white/60">
+        <div className="mx-auto max-w-7xl px-4 py-3 flex items-center justify-between">
           <a href="#home" className="font-semibold tracking-tight">
             Izzet Behic Sakar
           </a>
@@ -172,7 +172,7 @@ export default function Home() {
           <div className="flex items-center gap-2">
             <Link
               href="#contact"
-              className="rounded-2xl border px-3 py-2 hover:bg-slate-50"
+              className="rounded-2xl border border-slate-900 bg-slate-900 px-3 py-2 text-white hover:bg-slate-800"
             >
               Let’s talk
             </Link>
@@ -181,13 +181,13 @@ export default function Home() {
       </header>
 
       {/* Hero */}
-      <section id="home" className="mx-auto max-w-6xl px-4 pt-16 pb-10">
+      <section id="home" className="mx-auto max-w-7xl px-4 pt-16 pb-10">
         <div className="flex flex-col md:flex-row md:items-center gap-8">
           <div className="md:w-3/5">
             <p className="inline-flex items-center gap-2 text-xs uppercase tracking-wider text-slate-500">
               <MapPin className="size-4" /> Toronto, Canada
             </p>
-            <h1 className="mt-3 text-4xl/tight sm:text-5xl/tight font-extrabold tracking-[-0.02em]">
+            <h1 className="mt-3 text-5xl/tight sm:text-6xl/tight font-extrabold tracking-[-0.02em] bg-gradient-to-r from-slate-900 to-slate-600 bg-clip-text text-transparent">
               Builder, Blockchain Engineer, and Calisthenics Coach.
             </h1>
             <p className="mt-4 text-slate-600 max-w-prose">
@@ -210,7 +210,7 @@ export default function Home() {
             <div className="mt-6 flex flex-wrap items-center gap-3">
               <Link
                 href="#projects"
-                className="rounded-2xl border px-3 py-2 hover:bg-slate-50 inline-flex items-center"
+                className="rounded-2xl border border-slate-300 px-3 py-2 hover:bg-slate-50 inline-flex items-center"
               >
                 See projects <ArrowRight className="size-4 ml-1" />
               </Link>
@@ -252,7 +252,7 @@ export default function Home() {
       </section>
 
       {/* About */}
-      <section id="about" className="mx-auto max-w-6xl px-4 py-12">
+      <section id="about" className="mx-auto max-w-7xl px-4 py-12">
         <div className="grid md:grid-cols-3 gap-8">
           <div className="md:col-span-2">
             <h2 className="text-2xl font-bold">About</h2>
@@ -285,13 +285,13 @@ export default function Home() {
       </section>
 
       {/* Projects */}
-      <section id="projects" className="mx-auto max-w-6xl px-4 py-12">
+      <section id="projects" className="mx-auto max-w-7xl px-4 py-12">
         <h2 className="text-2xl font-bold">Featured projects</h2>
         <div className="mt-6 grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {projects.map((p) => (
             <div
               key={p.title}
-              className="rounded-3xl shadow-sm border p-6 hover:shadow-md transition"
+              className="rounded-3xl border border-slate-200/60 bg-white/80 backdrop-blur p-6 shadow-sm transition hover:-translate-y-0.5 hover:shadow-lg"
             >
               <div className="flex items-start justify-between gap-4">
                 <div>
@@ -313,7 +313,7 @@ export default function Home() {
                 {p.tags.map((t) => (
                   <span
                     key={t}
-                    className="text-[11px] rounded-full border px-2 py-1"
+                    className="text-[11px] rounded-full bg-slate-100 px-2.5 py-1 text-slate-700"
                   >
                     {t}
                   </span>
@@ -325,8 +325,8 @@ export default function Home() {
       </section>
 
       {/* SkillRise */}
-      <section id="skillrise" className="mx-auto max-w-6xl px-4 py-12">
-        <div className="rounded-3xl border shadow-sm p-8 md:p-10">
+      <section id="skillrise" className="mx-auto max-w-7xl px-4 py-12">
+        <div className="rounded-3xl border border-slate-200/60 bg-white/80 backdrop-blur shadow-sm p-8 md:p-10">
           <div className="flex flex-col gap-6 md:flex-row md:items-start md:justify-between">
             <div className="max-w-2xl">
               <h2 className="text-2xl font-bold">
@@ -375,13 +375,16 @@ export default function Home() {
       </section>
 
       {/* Services */}
-      <section id="services" className="mx-auto max-w-6xl px-4 py-12">
+      <section id="services" className="mx-auto max-w-7xl px-4 py-12">
         <h2 className="text-2xl font-bold">What I do</h2>
         <div className="mt-6 grid md:grid-cols-3 gap-6">
           {services.map((s) => (
-            <div key={s.title} className="rounded-3xl shadow-sm border p-6">
+            <div
+              key={s.title}
+              className="rounded-3xl border border-slate-200/60 bg-white/80 backdrop-blur p-6 shadow-sm hover:shadow-md"
+            >
               <div className="flex items-center gap-3">
-                <div className="rounded-2xl border p-2">
+                <div className="rounded-2xl border p-2 bg-white ring-1 ring-slate-200">
                   <s.Icon className="size-6" aria-hidden />
                 </div>
                 <h3 className="font-semibold">{s.title}</h3>
@@ -397,8 +400,8 @@ export default function Home() {
       </section>
 
       {/* Coaching CTA */}
-      <section id="coaching" className="mx-auto max-w-6xl px-4 py-12">
-        <div className="rounded-3xl shadow-sm border p-8 md:p-10">
+      <section id="coaching" className="mx-auto max-w-7xl px-4 py-12">
+        <div className="rounded-3xl border border-slate-200/60 bg-white/80 backdrop-blur shadow-sm p-8 md:p-10">
           <div className="md:flex items-center justify-between gap-8">
             <div className="max-w-2xl">
               <h2 className="text-2xl font-bold">1:1 Calisthenics Coaching</h2>
@@ -421,7 +424,7 @@ export default function Home() {
       </section>
 
       {/* Contact */}
-      <section id="contact" className="mx-auto max-w-6xl px-4 py-12">
+      <section id="contact" className="mx-auto max-w-7xl px-4 py-12">
         <h2 className="text-2xl font-bold">Contact</h2>
         <p className="mt-2 text-slate-700">
           Reach out for collaborations, coaching, or consulting.
@@ -474,7 +477,7 @@ export default function Home() {
 
       {/* Footer */}
       <footer className="mt-10 border-t">
-        <div className="mx-auto max-w-6xl px-4 py-8 text-sm text-slate-500 flex flex-col sm:flex-row items-center justify-between gap-4">
+        <div className="mx-auto max-w-7xl px-4 py-8 text-sm text-slate-500 flex flex-col sm:flex-row items-center justify-between gap-4">
           <div>
             © {new Date().getFullYear()} Izzet Behic Sakar. All rights reserved.
           </div>
