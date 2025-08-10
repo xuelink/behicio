@@ -1,5 +1,12 @@
-function isLikelyEmail(value) {
-  return /[^@\s]+@[^@\s]+\.[^@\s]+/.test(String(value || ""));
+// No email validation needed; replyTo may contain email or Telegram
+
+function escapeHtml(input = "") {
+  return String(input)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
 }
 
 module.exports = async (req, res) => {
@@ -33,14 +40,21 @@ module.exports = async (req, res) => {
     const message = payload.message || payload.content || payload.body || "";
 
     const from = RESEND_FROM || "onboarding@resend.dev";
+    const subject = `New contact from ${name}`;
+    const text = `Event: ${APPWRITE_FUNCTION_EVENT || "n/a"}\n\nName: ${name}\nReply: ${replyTo}\n\n${message}`;
+    const html = `<div style="font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif">
+      <p><strong>Name:</strong> ${escapeHtml(name)}</p>
+      <p><strong>Reply:</strong> ${escapeHtml(replyTo)}</p>
+      <p><strong>Message:</strong></p>
+      <pre style=\"white-space:pre-wrap;font-family:inherit\">${escapeHtml(message)}</pre>
+    </div>`;
+
     const body = {
       from,
-      to: EMAIL_TO,
-      subject: `New contact from ${name}`,
-      text: `Event: ${
-        APPWRITE_FUNCTION_EVENT || "n/a"
-      }\n\nName: ${name}\nReply: ${replyTo}\n\n${message}`,
-      ...(isLikelyEmail(replyTo) ? { reply_to: replyTo } : {}),
+      to: [EMAIL_TO],
+      subject,
+      text,
+      html,
     };
 
     const resp = await fetch("https://api.resend.com/emails", {
@@ -52,13 +66,20 @@ module.exports = async (req, res) => {
       body: JSON.stringify(body),
     });
 
-    if (!resp.ok) {
-      const err = await resp.text();
-      return res.json({ ok: false, error: err }, 500);
+    const dataText = await resp.text();
+    let data;
+    try {
+      data = JSON.parse(dataText);
+    } catch {
+      data = { raw: dataText };
     }
-
-    const data = await resp.json();
-    return res.json({ ok: true, id: data.id || null });
+    if (!resp.ok) {
+      return res.json(
+        { ok: false, status: resp.status, error: data?.message || data },
+        500
+      );
+    }
+    return res.json({ ok: true, id: data?.id || null });
   } catch (err) {
     return res.json({ ok: false, error: err?.message || String(err) }, 500);
   }
