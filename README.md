@@ -50,7 +50,26 @@ public/
 - **SkillRise**: The dedicated section `#skillrise` links to your course platform. Adjust copy/feature pills or link target (`https://skillrise.me/`).
 - **Services**: Update the `services` array (Software & AI, Blockchain/Web3, IT & Infrastructure, Coaching).
 - **Skills**: Edit the `skills` array (includes `ethers.js`, `Foundry`, `SPL / Solana, ERC‑20, BEP‑20`).
-- **Contact**: The form currently shows an alert; wire it to email/Appwrite or another backend.
+- **Contact**: The form writes to Appwrite Database. Provide envs `NEXT_PUBLIC_APPWRITE_ENDPOINT`, `NEXT_PUBLIC_APPWRITE_PROJECT_ID`, `NEXT_PUBLIC_APPWRITE_DATABASE_ID`, `NEXT_PUBLIC_APPWRITE_COLLECTION_ID`.
+
+### Appwrite Function: contact-email
+
+Located at `appwrite/functions/contact-email/`. Sends an email (via Resend HTTP API) when a document is created in the contact collection.
+
+Setup in Appwrite Console:
+
+- Create Function (Node.js 18+), upload that folder, entrypoint `index.js`.
+- Triggers → Events → Database → Documents → Create → select your Database and Contact collection.
+- Environment Variables:
+  - `RESEND_API_KEY` (required)
+  - `EMAIL_TO` (required)
+  - `RESEND_FROM` (optional; defaults to `onboarding@resend.dev`)
+- Deploy the function.
+
+Troubleshooting:
+
+- If emails aren’t delivered, check Function logs for the Resend API response, verify your sender domain or allowed recipients on Resend, and confirm the trigger targets the correct database/collection.
+- Deploy the function.
 
 ### Styling
 
