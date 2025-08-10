@@ -27,7 +27,13 @@ concurrency:
 jobs:
   # Build job
   build:
+    # Use GitHub Environments for environment-scoped secrets
+    environment: production
     runs-on: ubuntu-latest
+    env:
+      RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
+      CONTACT_TO_EMAIL: ${{ secrets.CONTACT_TO_EMAIL }}
+      CONTACT_FROM_EMAIL: ${{ secrets.CONTACT_FROM_EMAIL }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
