@@ -45,6 +45,16 @@ export default async ({ req, res, log, error, env }) => {
     payloadLength: req?.payload ? String(req?.payload).length : 0
   });
 
+  // Additional payload debugging for database triggers
+  log('[contact-email] payload deep debug', {
+    rawPayload: req?.payload,
+    payloadString: String(req?.payload),
+    payloadJSON: req?.payload ? JSON.stringify(req?.payload) : 'undefined',
+    headersContentType: req?.headers?.['content-type'],
+    headersContentLength: req?.headers?.['content-length'],
+    isDatabaseEvent: req?.headers?.['x-appwrite-trigger'] === 'event'
+  });
+
   try {
     // Handle ping endpoint for testing
     if (req?.path === '/ping') {
