@@ -162,12 +162,12 @@ const skills = [
 const certifications = [
   {
     src: "/certs/wswcf_diploma20239552.png",
-    alt: "WSWCF Diploma #20239552",
     name: "WSWCF Diploma #20239552",
+    verifyUrl:
+      "https://wswcfacademy.com/certification-of-trainers/certified-trainers/?country=&firstname=izzet+behic+sakar&phone=",
   },
   {
     src: "/certs/Apple_Ads_Certification.png",
-    alt: "Apple Ads Certification",
     name: "Apple Ads Certification",
     verifyUrl: "https://certification-ads.apple.com/certificate/6QZ6dwUstx",
   },
@@ -423,20 +423,20 @@ export default function Home() {
                 >
                   <Image
                     src={c.src}
-                    alt={c.alt || "Certificate"}
+                    alt={c.name || "Certificate"}
                     fill
                     sizes="(max-width: 640px) 60vw, (max-width: 1024px) 40vw, 25vw"
                     className="object-contain"
                   />
                 </button>
                 <div className="mt-2 w-48 sm:w-56 md:w-64 flex items-center justify-center gap-2 text-sm text-slate-700">
-                  <span>{c.name || c.alt}</span>
+                  <span>{c.name}</span>
                   {c.verifyUrl && (
                     <a
                       href={c.verifyUrl}
                       target="_blank"
                       rel="noreferrer"
-                      aria-label={`Verify ${c.name || c.alt}`}
+                      aria-label={`Verify ${c.name}`}
                       className="text-slate-500 hover:text-slate-700"
                     >
                       <ExternalLink className="size-4" />
@@ -469,7 +469,7 @@ export default function Home() {
               <div className="relative mx-auto w-full aspect-[4/3] overflow-hidden rounded-xl bg-black/20">
                 <Image
                   src={certifications[lightboxIndex].src}
-                  alt={certifications[lightboxIndex].alt || "Certificate"}
+                  alt={certifications[lightboxIndex].name || "Certificate"}
                   fill
                   sizes="100vw"
                   className="object-contain"
@@ -477,7 +477,7 @@ export default function Home() {
                 />
               </div>
               <p className="mt-3 text-center text-sm text-white/80">
-                {certifications[lightboxIndex].alt || "Certificate"}
+                {certifications[lightboxIndex].name || "Certificate"}
               </p>
             </div>
           </div>
