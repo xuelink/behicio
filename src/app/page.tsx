@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import Script from "next/script";
@@ -159,10 +159,27 @@ const skills = [
   "SPL / Solana, ERC‑20, BEP‑20",
 ];
 
+const certifications = [
+  {
+    src: "/certs/wswcf_diploma20239552.png",
+    alt: "WSWCF Diploma #20239552",
+  },
+  // Add more certificates here as { src: "/certs/your-file.png", alt: "Your alt" }
+];
+
 export default function Home() {
   const [emailCopied, setEmailCopied] = useState(false);
   const [turnstileId, setTurnstileId] = useState<string | null>(null);
   const siteKey = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY;
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
+
+  const scrollByCards = (direction: number) => {
+    const el = scrollRef.current;
+    if (!el) return;
+    const amount = Math.round(el.clientWidth * 0.8);
+    el.scrollBy({ left: direction * amount, behavior: "smooth" });
+  };
 
   useEffect(() => {
     if (!siteKey) return;
@@ -174,6 +191,15 @@ export default function Home() {
       setTurnstileId(id);
     }
   }, [siteKey, turnstileId]);
+
+  useEffect(() => {
+    if (lightboxIndex === null) return;
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setLightboxIndex(null);
+    };
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, [lightboxIndex]);
 
   const handleCopy = async () => {
     try {
@@ -208,6 +234,9 @@ export default function Home() {
           <nav className="hidden sm:flex items-center gap-6 text-sm">
             <a href="#about" className="hover:text-slate-700">
               About
+            </a>
+            <a href="#certifications" className="hover:text-slate-700">
+              Certifications
             </a>
             <a href="#projects" className="hover:text-slate-700">
               Projects
@@ -345,6 +374,92 @@ export default function Home() {
             </ul>
           </div>
         </div>
+      </section>
+
+      {/* Certifications */}
+      <section id="certifications" className="mx-auto max-w-7xl px-4 py-12">
+        <h2 className="text-2xl font-bold">Certifications</h2>
+        <div className="mt-6 rounded-3xl border border-slate-200/60 bg-white/80 backdrop-blur p-4 sm:p-6">
+          <div className="flex items-center justify-between mb-3">
+            <button
+              type="button"
+              onClick={() => scrollByCards(-1)}
+              className="rounded-xl border px-3 py-1 text-sm hover:bg-slate-50"
+              aria-label="Previous certificates"
+            >
+              Prev
+            </button>
+            <div className="text-xs text-slate-500">
+              {certifications.length} item
+              {certifications.length === 1 ? "" : "s"}
+            </div>
+            <button
+              type="button"
+              onClick={() => scrollByCards(1)}
+              className="rounded-xl border px-3 py-1 text-sm hover:bg-slate-50"
+              aria-label="Next certificates"
+            >
+              Next
+            </button>
+          </div>
+          <div
+            ref={scrollRef}
+            className="flex gap-4 overflow-x-auto snap-x snap-mandatory pb-2"
+          >
+            {certifications.map((c, i) => (
+              <button
+                key={`${c.src}-${i}`}
+                type="button"
+                onClick={() => setLightboxIndex(i)}
+                className="relative w-48 sm:w-56 md:w-64 aspect-[4/3] shrink-0 snap-center overflow-hidden rounded-xl border bg-slate-100"
+                aria-label={`Open certificate ${i + 1}`}
+              >
+                <Image
+                  src={c.src}
+                  alt={c.alt || "Certificate"}
+                  fill
+                  sizes="(max-width: 640px) 60vw, (max-width: 1024px) 40vw, 25vw"
+                  className="object-contain"
+                />
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {lightboxIndex !== null && (
+          <div
+            className="fixed inset-0 z-50 bg-black/70 p-4 flex items-center justify-center"
+            role="dialog"
+            aria-modal="true"
+            onClick={(e) => {
+              if (e.currentTarget === e.target) setLightboxIndex(null);
+            }}
+          >
+            <button
+              type="button"
+              onClick={() => setLightboxIndex(null)}
+              className="absolute top-4 right-4 rounded-lg border border-white/30 bg-white/10 px-3 py-1.5 text-white backdrop-blur hover:bg-white/20"
+              aria-label="Close"
+            >
+              Close
+            </button>
+            <div className="w-full max-w-5xl">
+              <div className="relative mx-auto w-full aspect-[4/3] overflow-hidden rounded-xl bg-black/20">
+                <Image
+                  src={certifications[lightboxIndex].src}
+                  alt={certifications[lightboxIndex].alt || "Certificate"}
+                  fill
+                  sizes="100vw"
+                  className="object-contain"
+                  priority
+                />
+              </div>
+              <p className="mt-3 text-center text-sm text-white/80">
+                {certifications[lightboxIndex].alt || "Certificate"}
+              </p>
+            </div>
+          </div>
+        )}
       </section>
 
       {/* Projects */}
