@@ -167,6 +167,11 @@ const certifications = [
       "https://wswcfacademy.com/certification-of-trainers/certified-trainers/?country=&firstname=izzet+behic+sakar&phone=",
   },
   {
+    src: "/certs/NCCP_Safe_Sport_Training_7015528.png",
+    name: " Safe Sport Training #7015528",
+    verifyUrl: "https://thelocker.coach.ca/access/account/public",
+  },
+  {
     src: "/certs/Apple_Ads_Certification.png",
     name: "Apple Ads Certification",
     verifyUrl: "https://certification-ads.apple.com/certificate/6QZ6dwUstx",
