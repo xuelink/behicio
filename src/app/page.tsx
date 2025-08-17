@@ -169,6 +169,7 @@ const certifications = [
     src: "/certs/Apple_Ads_Certification.png",
     alt: "Apple Ads Certification",
     name: "Apple Ads Certification",
+    verifyUrl: "https://certification-ads.apple.com/certificate/6QZ6dwUstx",
   },
   // Add more certificates here as { src: "/certs/your-file.png", alt: "Your alt", name: "Certificate name" }
 ];
@@ -428,8 +429,19 @@ export default function Home() {
                     className="object-contain"
                   />
                 </button>
-                <div className="mt-2 w-48 sm:w-56 md:w-64 text-center text-sm text-slate-700">
-                  {c.name || c.alt}
+                <div className="mt-2 w-48 sm:w-56 md:w-64 flex items-center justify-center gap-2 text-sm text-slate-700">
+                  <span>{c.name || c.alt}</span>
+                  {c.verifyUrl && (
+                    <a
+                      href={c.verifyUrl}
+                      target="_blank"
+                      rel="noreferrer"
+                      aria-label={`Verify ${c.name || c.alt}`}
+                      className="text-slate-500 hover:text-slate-700"
+                    >
+                      <ExternalLink className="size-4" />
+                    </a>
+                  )}
                 </div>
               </div>
             ))}
