@@ -258,6 +258,15 @@ export default function Home() {
                 rel="noreferrer"
               >
                 LangX.io
+              </a>{" "}
+              and {""}
+              <a
+                className="underline underline-offset-4 decoration-slate-300 hover:decoration-slate-700"
+                href="https://skillrise.me"
+                target="_blank"
+                rel="noreferrer"
+              >
+                SkillRise.me
               </a>
               .
             </p>
@@ -329,7 +338,7 @@ export default function Home() {
           <div className="md:col-span-1 rounded-3xl shadow-sm border p-6">
             <h3 className="font-semibold">Quick facts</h3>
             <ul className="mt-3 text-sm space-y-2 text-slate-700">
-              <li>• Founder @ LangX.io</li>
+              <li>• Founder @ LangX.io & SkillRise.me</li>
               <li>• WSWCF coach & street workout nerd</li>
               <li>• Interested in AI agents & evals</li>
               <li>• Open to collabs & consulting</li>
