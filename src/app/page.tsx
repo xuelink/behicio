@@ -165,6 +165,11 @@ const certifications = [
     alt: "WSWCF Diploma #20239552",
     name: "WSWCF Diploma #20239552",
   },
+  {
+    src: "/certs/Apple_Ads_Certification.png",
+    alt: "Apple Ads Certification",
+    name: "Apple Ads Certification",
+  },
   // Add more certificates here as { src: "/certs/your-file.png", alt: "Your alt", name: "Certificate name" }
 ];
 
