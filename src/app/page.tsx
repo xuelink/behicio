@@ -163,8 +163,9 @@ const certifications = [
   {
     src: "/certs/wswcf_diploma20239552.png",
     alt: "WSWCF Diploma #20239552",
+    name: "WSWCF Diploma #20239552",
   },
-  // Add more certificates here as { src: "/certs/your-file.png", alt: "Your alt" }
+  // Add more certificates here as { src: "/certs/your-file.png", alt: "Your alt", name: "Certificate name" }
 ];
 
 export default function Home() {
@@ -407,21 +408,25 @@ export default function Home() {
             className="flex gap-4 overflow-x-auto snap-x snap-mandatory pb-2"
           >
             {certifications.map((c, i) => (
-              <button
-                key={`${c.src}-${i}`}
-                type="button"
-                onClick={() => setLightboxIndex(i)}
-                className="relative w-48 sm:w-56 md:w-64 aspect-[4/3] shrink-0 snap-center overflow-hidden rounded-xl border bg-slate-100"
-                aria-label={`Open certificate ${i + 1}`}
-              >
-                <Image
-                  src={c.src}
-                  alt={c.alt || "Certificate"}
-                  fill
-                  sizes="(max-width: 640px) 60vw, (max-width: 1024px) 40vw, 25vw"
-                  className="object-contain"
-                />
-              </button>
+              <div key={`${c.src}-${i}`} className="shrink-0 snap-center">
+                <button
+                  type="button"
+                  onClick={() => setLightboxIndex(i)}
+                  className="relative w-48 sm:w-56 md:w-64 aspect-[4/3] overflow-hidden rounded-xl border bg-slate-100"
+                  aria-label={`Open certificate ${i + 1}`}
+                >
+                  <Image
+                    src={c.src}
+                    alt={c.alt || "Certificate"}
+                    fill
+                    sizes="(max-width: 640px) 60vw, (max-width: 1024px) 40vw, 25vw"
+                    className="object-contain"
+                  />
+                </button>
+                <div className="mt-2 w-48 sm:w-56 md:w-64 text-center text-sm text-slate-700">
+                  {c.name || c.alt}
+                </div>
+              </div>
             ))}
           </div>
         </div>
