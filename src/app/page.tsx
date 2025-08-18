@@ -1,5 +1,11 @@
 "use client";
-import { useState, useEffect, useRef } from "react";
+import {
+  useState,
+  useEffect,
+  useRef,
+  useCallback,
+  type TouchEvent,
+} from "react";
 import Link from "next/link";
 import Image from "next/image";
 import Script from "next/script";
@@ -225,18 +231,18 @@ export default function Home() {
   const touchStartX = useRef<number | null>(null);
   const touchMoved = useRef(false);
 
-  const onTouchStart = (e: any) => {
+  const onTouchStart = (e: TouchEvent<HTMLDivElement>) => {
     touchStartX.current = e.touches?.[0]?.clientX ?? null;
     touchMoved.current = false;
   };
 
-  const onTouchMove = (e: any) => {
+  const onTouchMove = (e: TouchEvent<HTMLDivElement>) => {
     if (touchStartX.current === null) return;
     const dx = (e.touches?.[0]?.clientX ?? 0) - touchStartX.current;
     if (Math.abs(dx) > 10) touchMoved.current = true;
   };
 
-  const onTouchEnd = (e: any) => {
+  const onTouchEnd = (e: TouchEvent<HTMLDivElement>) => {
     if (touchStartX.current === null) return;
     const dx = (e.changedTouches?.[0]?.clientX ?? 0) - touchStartX.current;
     const threshold = 50; // minimum px swipe to change image
@@ -251,17 +257,19 @@ export default function Home() {
     touchMoved.current = false;
   };
 
-  const nextLightbox = () => {
-    if (lightboxIndex === null) return;
-    setLightboxIndex((lightboxIndex + 1) % certifications.length);
-  };
+  const nextLightbox = useCallback(() => {
+    setLightboxIndex((idx) => {
+      if (idx === null) return idx;
+      return (idx + 1) % certifications.length;
+    });
+  }, []);
 
-  const prevLightbox = () => {
-    if (lightboxIndex === null) return;
-    setLightboxIndex(
-      (lightboxIndex - 1 + certifications.length) % certifications.length
-    );
-  };
+  const prevLightbox = useCallback(() => {
+    setLightboxIndex((idx) => {
+      if (idx === null) return idx;
+      return (idx - 1 + certifications.length) % certifications.length;
+    });
+  }, []);
 
   const scrollByCards = (direction: number) => {
     const el = scrollRef.current;
@@ -294,7 +302,7 @@ export default function Home() {
     };
     window.addEventListener("keydown", onKeyDown);
     return () => window.removeEventListener("keydown", onKeyDown);
-  }, [lightboxIndex]);
+  }, [lightboxIndex, nextLightbox, prevLightbox]);
 
   const handleCopy = async () => {
     try {
