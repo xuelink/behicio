@@ -221,6 +221,35 @@ export default function Home() {
   const siteKey = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY;
   const scrollRef = useRef<HTMLDivElement>(null);
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
+  // Touch handling for lightbox swipe on mobile
+  const touchStartX = useRef<number | null>(null);
+  const touchMoved = useRef(false);
+
+  const onTouchStart = (e: any) => {
+    touchStartX.current = e.touches?.[0]?.clientX ?? null;
+    touchMoved.current = false;
+  };
+
+  const onTouchMove = (e: any) => {
+    if (touchStartX.current === null) return;
+    const dx = (e.touches?.[0]?.clientX ?? 0) - touchStartX.current;
+    if (Math.abs(dx) > 10) touchMoved.current = true;
+  };
+
+  const onTouchEnd = (e: any) => {
+    if (touchStartX.current === null) return;
+    const dx = (e.changedTouches?.[0]?.clientX ?? 0) - touchStartX.current;
+    const threshold = 50; // minimum px swipe to change image
+    if (Math.abs(dx) > threshold) {
+      if (dx < 0) {
+        nextLightbox();
+      } else {
+        prevLightbox();
+      }
+    }
+    touchStartX.current = null;
+    touchMoved.current = false;
+  };
 
   const nextLightbox = () => {
     if (lightboxIndex === null) return;
@@ -523,6 +552,9 @@ export default function Home() {
             onClick={(e) => {
               if (e.currentTarget === e.target) setLightboxIndex(null);
             }}
+            onTouchStart={onTouchStart}
+            onTouchMove={onTouchMove}
+            onTouchEnd={onTouchEnd}
           >
             <button
               type="button"
