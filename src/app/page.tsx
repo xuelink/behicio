@@ -181,6 +181,12 @@ const certifications: Certification[] = [
     verifyUrl: "https://www.iusca.org/",
   },
   {
+    src: "/certs/SafeSport_Certificate_Core_v3.png",
+    name: "SafeSport Core Training",
+    issuer: "U.S. Center for SafeSport",
+    verifyUrl: "https://safesport.org",
+  },
+  {
     src: "/certs/NCCP_Safe_Sport_Training_7015528.png",
     name: "NCCP Safe Sport Training #7015528",
     issuer: "NCCP / Coach.ca",
@@ -206,7 +212,6 @@ const certifications: Certification[] = [
     issuer: "Apple",
     verifyUrl: "https://certification-ads.apple.com/certificate/6QZ6dwUstx",
   },
-
   // Add more certificates here as { src: "/certs/your-file.png", alt: "Your alt", name: "Certificate name" }
 ];
 
