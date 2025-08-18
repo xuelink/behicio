@@ -190,13 +190,15 @@ const certifications: Certification[] = [
     src: "/certs/HSK (Level 3).png",
     name: "Chinese Proficiency - HSK Level 3",
     issuer: "ChineseTest.cn",
-    verifyUrl: "https://www.chinesetest.cn/",
+    verifyUrl:
+      "https://www.chinesetest.cn/queryScore?sid=4149f3b34fd170d933fcbac5b92b9619%275cf381b131154fe0899413f0ccf1fd78",
   },
   {
     src: "/certs/HSK Speaking.png",
     name: "Chinese Proficiency - HSK Speaking",
     issuer: "ChineseTest.cn",
-    verifyUrl: "https://www.chinesetest.cn/",
+    verifyUrl:
+      "https://www.chinesetest.cn/queryScore?sid=36158f727597efe449bea6cf6e448d65%27852ae197ddff4eaf9cca31957b765a0c",
   },
   {
     src: "/certs/Apple_Ads_Certification.png",
