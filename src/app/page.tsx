@@ -222,6 +222,18 @@ export default function Home() {
   const scrollRef = useRef<HTMLDivElement>(null);
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
 
+  const nextLightbox = () => {
+    if (lightboxIndex === null) return;
+    setLightboxIndex((lightboxIndex + 1) % certifications.length);
+  };
+
+  const prevLightbox = () => {
+    if (lightboxIndex === null) return;
+    setLightboxIndex(
+      (lightboxIndex - 1 + certifications.length) % certifications.length
+    );
+  };
+
   const scrollByCards = (direction: number) => {
     const el = scrollRef.current;
     if (!el) return;
@@ -243,7 +255,13 @@ export default function Home() {
   useEffect(() => {
     if (lightboxIndex === null) return;
     const onKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "Escape") setLightboxIndex(null);
+      if (e.key === "Escape") {
+        setLightboxIndex(null);
+      } else if (e.key === "ArrowRight") {
+        nextLightbox();
+      } else if (e.key === "ArrowLeft") {
+        prevLightbox();
+      }
     };
     window.addEventListener("keydown", onKeyDown);
     return () => window.removeEventListener("keydown", onKeyDown);
@@ -514,6 +532,25 @@ export default function Home() {
             >
               Close
             </button>
+
+            <button
+              type="button"
+              onClick={prevLightbox}
+              className="absolute left-4 top-1/2 -translate-y-1/2 rounded-full bg-white/10 border p-2 text-white hover:bg-white/20"
+              aria-label="Previous certificate"
+            >
+              ‹
+            </button>
+
+            <button
+              type="button"
+              onClick={nextLightbox}
+              className="absolute right-4 top-1/2 -translate-y-1/2 rounded-full bg-white/10 border p-2 text-white hover:bg-white/20"
+              aria-label="Next certificate"
+            >
+              ›
+            </button>
+
             <div className="w-full max-w-5xl">
               <div className="relative mx-auto w-full aspect-[4/3] overflow-hidden rounded-xl bg-black/20">
                 <Image
