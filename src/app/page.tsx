@@ -161,8 +161,7 @@ const skills = [
 
 type Certification = {
   src: string;
-  name?: string;
-  title?: string;
+  name: string;
   verifyUrl?: string;
   issuer?: string;
 };
@@ -170,40 +169,42 @@ type Certification = {
 const certifications: Certification[] = [
   {
     src: "/certs/wswcf_diploma20239552.png",
-    title: "Calisthenics and Street Workout Personal Trainer",
     name: "WSWCF Calisthenics and Street Workout Personal Trainer",
     issuer: "WSWCF Academy",
     verifyUrl:
       "https://wswcfacademy.com/certification-of-trainers/certified-trainers/?country=&firstname=izzet+behic+sakar&phone=",
   },
   {
+    src: "/certs/IUSCA_Level1.png",
+    name: "IUSCA Certificate in Strength & Conditioning L1",
+    issuer: "IUSCA",
+    verifyUrl: "https://www.iusca.org/",
+  },
+  {
     src: "/certs/NCCP_Safe_Sport_Training_7015528.png",
-    title: "Safe Sport Training",
-    name: "Safe Sport Training #7015528",
+    name: "NCCP Safe Sport Training #7015528",
     issuer: "NCCP / Coach.ca",
     verifyUrl: "https://thelocker.coach.ca/access/account/public",
   },
   {
     src: "/certs/HSK (Level 3).png",
-    title: "HSK Level 3",
     name: "Chinese Proficiency - HSK Level 3",
     issuer: "ChineseTest.cn",
     verifyUrl: "https://www.chinesetest.cn/",
   },
   {
     src: "/certs/HSK Speaking.png",
-    title: "HSK Speaking",
     name: "Chinese Proficiency - HSK Speaking",
     issuer: "ChineseTest.cn",
     verifyUrl: "https://www.chinesetest.cn/",
   },
   {
     src: "/certs/Apple_Ads_Certification.png",
-    title: "Apple Ads Certification",
     name: "Apple Ads Certification",
     issuer: "Apple",
     verifyUrl: "https://certification-ads.apple.com/certificate/6QZ6dwUstx",
   },
+
   // Add more certificates here as { src: "/certs/your-file.png", alt: "Your alt", name: "Certificate name" }
 ];
 
@@ -456,14 +457,14 @@ export default function Home() {
                 >
                   <Image
                     src={c.src}
-                    alt={c.title || c.name || "Certificate"}
+                    alt={c.name || "Certificate"}
                     fill
                     sizes="(max-width: 640px) 60vw, (max-width: 1024px) 40vw, 25vw"
                     className="object-contain"
                   />
                 </button>
                 <div className="mt-2 w-48 sm:w-56 md:w-64 text-center text-sm text-slate-700">
-                  <div className="font-medium">{c.title || c.name}</div>
+                  <div className="font-medium">{c.name}</div>
                   <div className="mt-1 flex items-center justify-center gap-2 text-xs text-slate-500">
                     <span>
                       {c.issuer ??
@@ -510,11 +511,7 @@ export default function Home() {
               <div className="relative mx-auto w-full aspect-[4/3] overflow-hidden rounded-xl bg-black/20">
                 <Image
                   src={certifications[lightboxIndex].src}
-                  alt={
-                    certifications[lightboxIndex].title ||
-                    certifications[lightboxIndex].name ||
-                    "Certificate"
-                  }
+                  alt={certifications[lightboxIndex].name || "Certificate"}
                   fill
                   sizes="100vw"
                   className="object-contain"
@@ -523,8 +520,7 @@ export default function Home() {
               </div>
               <div className="mt-3 text-center text-white/80">
                 <div className="font-medium">
-                  {certifications[lightboxIndex].title ||
-                    certifications[lightboxIndex].name}
+                  {certifications[lightboxIndex].name}
                 </div>
                 <div className="text-xs text-white/60">
                   {certifications[lightboxIndex].issuer ??
