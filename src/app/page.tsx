@@ -371,6 +371,24 @@ export default function Home() {
         </div>
       </header>
 
+      {/* Promo banner: Barvore discount code */}
+      <div className="mx-auto max-w-7xl px-4">
+        <div className="mt-2 rounded-xl border border-indigo-100 bg-indigo-50 text-indigo-800 text-sm px-4 py-2 flex items-center justify-center gap-2">
+          <span className="text-sm font-medium">
+            Barvore — Premium Calisthenics Gear. Use code{" "}
+            <strong className="font-semibold">BEHIC</strong>.
+          </span>
+          <a
+            href="https://barvore.com/?ref=behic.io"
+            target="_blank"
+            rel="noreferrer"
+            className="underline ml-2"
+          >
+            Shop
+          </a>
+        </div>
+      </div>
+
       {/* Hero */}
       <section id="home" className="mx-auto max-w-7xl px-4 pt-16 pb-10">
         <div className="flex flex-col md:flex-row md:items-center gap-8">
