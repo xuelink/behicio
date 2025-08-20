@@ -174,6 +174,12 @@ type Certification = {
 
 const certifications: Certification[] = [
   {
+    src: "/certs/IZZET BEHIC SAKAR_NSCA.png",
+    name: "NSCA Calisthenics and Street Workout Personal Trainer",
+    issuer: "NSCA",
+    verifyUrl: "https://www.nsca.com",
+  },
+  {
     src: "/certs/wswcf_diploma20239552.png",
     name: "WSWCF Calisthenics and Street Workout Personal Trainer",
     issuer: "WSWCF Academy",
