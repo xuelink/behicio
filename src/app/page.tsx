@@ -544,14 +544,17 @@ export default function Home() {
           </div>
           <div
             ref={scrollRef}
-            className="flex gap-4 overflow-x-auto snap-x snap-mandatory pb-2"
+            className="flex gap-4 overflow-x-auto snap-x snap-mandatory pb-2 lg:grid lg:grid-cols-6 lg:grid-rows-2 lg:gap-4 lg:mt-2"
           >
             {certifications.map((c, i) => (
-              <div key={`${c.src}-${i}`} className="shrink-0 snap-center">
+              <div
+                key={`${c.src}-${i}`}
+                className="shrink-0 snap-center lg:static lg:shrink-0"
+              >
                 <button
                   type="button"
                   onClick={() => setLightboxIndex(i)}
-                  className="relative w-48 sm:w-56 md:w-64 aspect-[4/3] overflow-hidden rounded-xl border bg-slate-100"
+                  className="relative w-48 sm:w-56 md:w-64 aspect-[4/3] overflow-hidden rounded-xl border bg-slate-100 lg:w-full lg:h-40 lg:aspect-auto lg:p-3"
                   aria-label={`Open certificate ${i + 1}`}
                 >
                   <Image
@@ -562,7 +565,7 @@ export default function Home() {
                     className="object-contain"
                   />
                 </button>
-                <div className="mt-2 w-48 sm:w-56 md:w-64 text-center text-sm text-slate-700">
+                <div className="mt-2 w-48 sm:w-56 md:w-64 text-center text-sm text-slate-700 lg:w-full lg:mt-3">
                   <div className="font-medium">{c.name}</div>
                   <div className="mt-1 flex items-center justify-center gap-2 text-xs text-slate-500">
                     <span>
