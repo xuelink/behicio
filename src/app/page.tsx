@@ -520,7 +520,7 @@ export default function Home() {
       <section id="certifications" className="mx-auto max-w-7xl px-4 py-12">
         <h2 className="text-2xl font-bold">Certifications</h2>
         <div className="mt-6 rounded-3xl border border-slate-200/60 bg-white/80 backdrop-blur p-4 sm:p-6">
-          <div className="flex items-center justify-between mb-3">
+          <div className="relative flex items-center justify-between mb-3">
             <button
               type="button"
               onClick={() => scrollByCards(-1)}
@@ -529,7 +529,7 @@ export default function Home() {
             >
               Prev
             </button>
-            <div className="text-xs text-slate-500">
+            <div className="absolute left-1/2 transform -translate-x-1/2 text-xs text-slate-500">
               {certifications.length} item
               {certifications.length === 1 ? "" : "s"}
             </div>
@@ -544,17 +544,17 @@ export default function Home() {
           </div>
           <div
             ref={scrollRef}
-            className="flex gap-4 overflow-x-auto snap-x snap-mandatory pb-2 lg:grid lg:grid-cols-5 lg:grid-rows-2 lg:gap-6 lg:mt-4"
+            className="flex gap-4 overflow-x-auto snap-x snap-mandatory pb-2 lg:grid lg:grid-cols-4 lg:grid-rows-2 lg:gap-6 lg:mt-4 lg:justify-center lg:justify-items-center"
           >
             {certifications.map((c, i) => (
               <div
                 key={`${c.src}-${i}`}
-                className="shrink-0 snap-center lg:static lg:shrink-0"
+                className="shrink-0 snap-center lg:static lg:shrink-0 lg:flex lg:flex-col lg:items-center"
               >
                 <button
                   type="button"
                   onClick={() => setLightboxIndex(i)}
-                  className="relative w-48 sm:w-56 md:w-64 aspect-[4/3] overflow-hidden rounded-xl border bg-slate-100 lg:w-full lg:h-48 lg:aspect-auto lg:p-4"
+                  className="relative w-48 sm:w-56 md:w-72 aspect-[4/3] overflow-hidden rounded-xl border bg-slate-100 lg:w-56 lg:h-56 lg:aspect-auto lg:p-6"
                   aria-label={`Open certificate ${i + 1}`}
                 >
                   <Image
@@ -565,7 +565,7 @@ export default function Home() {
                     className="object-contain"
                   />
                 </button>
-                <div className="mt-2 w-48 sm:w-56 md:w-64 text-center text-sm text-slate-700 lg:w-full lg:mt-3">
+                <div className="mt-2 w-48 sm:w-56 md:w-72 text-center text-sm text-slate-700 lg:w-56 lg:mt-3">
                   <div className="font-medium">{c.name}</div>
                   <div className="mt-1 flex items-center justify-center gap-2 text-xs text-slate-500">
                     <span>
