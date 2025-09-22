@@ -524,7 +524,7 @@ export default function Home() {
             <button
               type="button"
               onClick={() => scrollByCards(-1)}
-              className="rounded-xl border px-3 py-1 text-sm hover:bg-slate-50"
+              className="rounded-xl border px-3 py-1 text-sm hover:bg-slate-50 lg:hidden"
               aria-label="Previous certificates"
             >
               Prev
@@ -536,7 +536,7 @@ export default function Home() {
             <button
               type="button"
               onClick={() => scrollByCards(1)}
-              className="rounded-xl border px-3 py-1 text-sm hover:bg-slate-50"
+              className="rounded-xl border px-3 py-1 text-sm hover:bg-slate-50 lg:hidden"
               aria-label="Next certificates"
             >
               Next
@@ -544,7 +544,7 @@ export default function Home() {
           </div>
           <div
             ref={scrollRef}
-            className="flex gap-4 overflow-x-auto snap-x snap-mandatory pb-2 lg:grid lg:grid-cols-6 lg:grid-rows-2 lg:gap-4 lg:mt-2"
+            className="flex gap-4 overflow-x-auto snap-x snap-mandatory pb-2 lg:grid lg:grid-cols-5 lg:grid-rows-2 lg:gap-6 lg:mt-4"
           >
             {certifications.map((c, i) => (
               <div
@@ -554,7 +554,7 @@ export default function Home() {
                 <button
                   type="button"
                   onClick={() => setLightboxIndex(i)}
-                  className="relative w-48 sm:w-56 md:w-64 aspect-[4/3] overflow-hidden rounded-xl border bg-slate-100 lg:w-full lg:h-40 lg:aspect-auto lg:p-3"
+                  className="relative w-48 sm:w-56 md:w-64 aspect-[4/3] overflow-hidden rounded-xl border bg-slate-100 lg:w-full lg:h-48 lg:aspect-auto lg:p-4"
                   aria-label={`Open certificate ${i + 1}`}
                 >
                   <Image
