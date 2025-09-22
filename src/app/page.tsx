@@ -224,6 +224,12 @@ const certifications: Certification[] = [
     issuer: "Apple",
     verifyUrl: "https://certification-ads.apple.com/certificate/6QZ6dwUstx",
   },
+  {
+    src: "/certs/certificate_aoda.png",
+    name: "Accessibility for Ontarians with Disabilities Act (AODA)",
+    issuer: "OSG / AODA",
+    verifyUrl: "https://aoda.ca",
+  },
   // Add more certificates here as { src: "/certs/your-file.png", alt: "Your alt", name: "Certificate name" }
 ];
 
