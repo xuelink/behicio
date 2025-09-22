@@ -219,10 +219,10 @@ const certifications: Certification[] = [
       "https://www.chinesetest.cn/queryScore?sid=36158f727597efe449bea6cf6e448d65%27852ae197ddff4eaf9cca31957b765a0c",
   },
   {
-    src: "/certs/Apple_Ads_Certification.png",
-    name: "Apple Ads Certification",
-    issuer: "Apple",
-    verifyUrl: "https://certification-ads.apple.com/certificate/6QZ6dwUstx",
+    src: "/certs/Vehicle for Hire Training.png",
+    name: "Vehicle for Hire Training - City of Toronto Driver Training Certification",
+    issuer: "Drive Pro",
+    verifyUrl: "https://certifications.rapidlms.com/certifications/3912275",
   },
   {
     src: "/certs/certificate_aoda.png",
@@ -230,6 +230,13 @@ const certifications: Certification[] = [
     issuer: "OSG / AODA",
     verifyUrl: "https://aoda.ca",
   },
+  {
+    src: "/certs/Apple_Ads_Certification.png",
+    name: "Apple Ads Certification",
+    issuer: "Apple",
+    verifyUrl: "https://certification-ads.apple.com/certificate/6QZ6dwUstx",
+  },
+
   // Add more certificates here as { src: "/certs/your-file.png", alt: "Your alt", name: "Certificate name" }
 ];
 
